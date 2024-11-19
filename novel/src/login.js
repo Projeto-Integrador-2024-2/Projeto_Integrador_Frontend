@@ -17,7 +17,7 @@ export default function Login() {
                 const { refresh, access } = response.data;
                 Cookies.set('refreshToken', refresh, { expires: 1, sameSite: 'none', secure: true });
                 Cookies.set('accessToken', access, { expires: 1, sameSite: 'none', secure: true });
-                window.location.href = '/';
+                window.location.href = '/create/project';
             }
         } catch (error) {
             console.error(error);
