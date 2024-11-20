@@ -1,23 +1,17 @@
 import React, { useState } from 'react';
-import api from './api_access';
-import Cookies from 'js-cookie';
+import api from '../api_access';
 
-export default function Login() {
+export default function Register() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await api.post('token/', {
-                username,
-                password
-            });
-            if (response.status === 200) {
-                const { refresh, access } = response.data;
-                Cookies.set('refreshToken', refresh, { expires: 1, sameSite: 'none', secure: true });
-                Cookies.set('accessToken', access, { expires: 1, sameSite: 'none', secure: true });
-                window.location.href = '/';
+            const response = await api.post('create/user', { username, password });
+            if (response.status === 201) {
+                // Redireciona para a página de login após o sucesso
+                window.location.href = '/login';
             }
         } catch (error) {
             console.error(error);
@@ -28,7 +22,7 @@ export default function Login() {
         <div className="container">
             <div className="row justify-content-center">
                 <div className="col-md-6">
-                    <h2 className="text-center">Login</h2>
+                    <h2 className="text-center">Registrar</h2>
                     <form onSubmit={handleSubmit}>
                         <div className="form-floating mb-2">
                             <input
@@ -53,7 +47,7 @@ export default function Login() {
                             <label>Password</label>
                         </div>
                         <button type="submit" className="btn btn-primary btn-block">
-                            Entrar
+                            Registrar
                         </button>
                     </form>
                 </div>
