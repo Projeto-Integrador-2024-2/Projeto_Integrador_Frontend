@@ -1,23 +1,27 @@
-import React, { useState, useEffect } from "react";
-import api from "./api_access";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import HomePage from "./HomePage";
+import Login from "./login";
+import ProtectedRoute from "./services/ProtectedRoute";
+import React from "react";
 
 function App() {
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    async function fetchData() {
-      const response = await api.get('todos');
-      setData(response.data);
-    }
-    fetchData();
-  }, []);
-
   return (
-    <div>
-      {data.map(function(item) {
-        return <p key={item.id}>{item.title}</p>;
-      })}
-    </div>
+    <Router>
+      <Routes>
+        {/* Página de Login - acessível para todos */}
+        <Route path="/login" element={<Login />} />
+        
+        {/* Página protegida */}
+        <Route 
+          path="/" 
+          element={
+            <ProtectedRoute>
+              <HomePage />
+            </ProtectedRoute>
+          } 
+        />
+      </Routes>
+    </Router>
   );
 }
 

@@ -1,11 +1,14 @@
 import Cookies from "js-cookie";
-import jwtDecode from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
+
 export default function isAuthenticated() {
     const refreshToken = Cookies.get('refreshToken');
     const accessToken = Cookies.get('accessToken');
     if (refreshToken && accessToken) {
         const isAccessTokenValid = validadeToken(accessToken);
         const isRefreshTokenValid = validadeToken(refreshToken);
+        console.log({isAccessTokenValid})
+        console.log({isRefreshTokenValid})
         if (isAccessTokenValid && isRefreshTokenValid) return true;
     }
     return false;
