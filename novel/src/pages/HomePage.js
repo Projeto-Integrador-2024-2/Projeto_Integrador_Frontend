@@ -28,6 +28,7 @@ const styles = {
   container: {
     textAlign: "center",
     marginTop: "100px",
+    backgroundColor: 'pink',
     fontFamily: "'Arial', sans-serif",
   },
   title: {

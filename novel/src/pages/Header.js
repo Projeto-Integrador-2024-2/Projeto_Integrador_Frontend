@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'; 
 import { Link } from 'react-router-dom';
 
 const Header = () => {
@@ -25,7 +25,7 @@ const styles = {
     top: 0,
     left: 0,
     width: '100%',
-    backgroundColor: '#007BFF',
+    backgroundColor: 'rgba(232, 5, 195, 0.8)', // Alterado para tornar o fundo translúcido
     padding: '10px 20px',
     boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.1)',
     zIndex: 1000,
