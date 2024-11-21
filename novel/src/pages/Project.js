@@ -25,7 +25,7 @@ export default function Project() {
         const payload = {
             name,
             privacy,
-            firstScene, // O ID da cena selecionada
+            first_scene: firstScene, // O ID da cena selecionada
         };
 
         console.log(payload)

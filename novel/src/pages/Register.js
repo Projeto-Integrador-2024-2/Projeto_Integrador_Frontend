@@ -14,9 +14,16 @@ export default function Register() {
                 window.location.href = '/login';
             }
         } catch (error) {
-            console.error(error);
+            if (error.response && error.response.status === 400) {
+                // Exibe um alerta informando que o usuário já foi utilizado
+                alert('O nome de usuário já está em uso. Por favor, escolha outro.');
+            } else {
+                // Exibe no console outros erros que possam ter ocorrido
+                console.error(error);
+            }
         }
     };
+    
 
     return (
         <div className="container">

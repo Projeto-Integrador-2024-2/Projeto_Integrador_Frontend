@@ -3,8 +3,9 @@ import HomePage from "./HomePage";
 import Login from "./Login";
 import Header from "./Header";
 import Register from "./Register";
-import Project from "./Project";
 import Scene from "./Scene";
+import Project from "./Project";
+
 import ProtectedRoute from "../services/ProtectedRoute";
 import React from "react";
 
@@ -19,20 +20,30 @@ function App() {
         <Route path="/login" element={<Login />} />
 
         {/* Página de Registro - acessível para todos */}
-        <Route path="/register" element={<Register />} /> {/* Adiciona a rota de registro */}
+        <Route path="/register" element={<Register />} />
 
-        {/* Página de Projeto - acessível para todos */}
-        <Route path="/project" element={<Project />} /> {/* Adiciona a rota de registro */}
-
-        {/* Página de Cenas - acessível para todos */}
-        <Route path="/scene" element={<Scene />} /> {/* Adiciona a rota de registro */}
-
-        {/* Página protegida */}
+        {/* Rotas protegidas */}
         <Route 
           path="/" 
           element={
             <ProtectedRoute>
               <HomePage />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/project" 
+          element={
+            <ProtectedRoute>
+              <Project />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/scene" 
+          element={
+            <ProtectedRoute>
+              <Scene />
             </ProtectedRoute>
           } 
         />
