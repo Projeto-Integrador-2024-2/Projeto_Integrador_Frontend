@@ -16,13 +16,23 @@ function HomePage() {
     navigate("/project"); // Redireciona para a página de project
   };
 
+  const redirectScene = () => {
+    navigate("/scene"); // Redireciona para a página de scene
+  };
+
+
   return (
     <div style={styles.container}>
       <h1 style={styles.title}>Bem-vindo à Home Page!</h1>
       <p style={styles.subtitle}>Você está logado com sucesso.</p>
       <button style={styles.button} onClick={redirectProject}>
         Projects
-      </button><hr></hr>
+      </button>
+      <hr></hr>
+      <button style={styles.button} onClick={redirectScene}>
+        Scenes
+      </button>
+      <hr></hr>
       <button style={styles.button} onClick={handleLogout}>
         Logout
       </button>
