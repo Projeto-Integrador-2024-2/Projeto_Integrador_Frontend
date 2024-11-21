@@ -1,6 +1,7 @@
 // adicionando/alterando imports:
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import Login from "./login";
+import Project from "./project";
 import isAuthenticated from "./services/auth";
 
 function ProtectedRoutes() {
@@ -9,7 +10,7 @@ function ProtectedRoutes() {
       {
         isAuthenticated() ? (
           <Routes>
-            <Route path="/project/" element={<ProjectList />} />
+            <Route path="/project/" element={<Project />} />
             <Route path="/project/:id" element={<ProjectDetail />} />
             <Route path="/project/new/" element={<ProjectNew />} />
             <Route path="/project/:id/edit/" element={<ProjectNew />} />
@@ -32,6 +33,7 @@ export default function MyRoutes() {
           <br />
           <div className="col-12">
             <Routes>
+              <Route path="/project/" element={<Project />} />
               <Route path="/" element={<Principal />} />
               <Route path="/*" element={<ProtectedRoutes />} />
               <Route path="/login/" element={<Login />} />
