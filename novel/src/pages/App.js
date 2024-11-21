@@ -4,6 +4,7 @@ import Login from "./Login";
 import Header from "./Header";
 import Register from "./Register";
 import Scene from "./Scene";
+import Choice from "./Choice";
 import Project from "./Project";
 
 import ProtectedRoute from "../services/ProtectedRoute";
@@ -44,6 +45,14 @@ function App() {
           element={
             <ProtectedRoute>
               <Scene />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/choice" 
+          element={
+            <ProtectedRoute>
+              <Choice />
             </ProtectedRoute>
           } 
         />

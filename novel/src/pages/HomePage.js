@@ -20,6 +20,9 @@ function HomePage() {
     navigate("/scene"); // Redireciona para a página de scene
   };
 
+  const redirectChoice = () => {
+    navigate("/choice"); // Redireciona para a página de choice
+  };
 
   return (
     <div style={styles.container}>
@@ -31,6 +34,10 @@ function HomePage() {
       <hr></hr>
       <button style={styles.button} onClick={redirectScene}>
         Scenes
+      </button>
+      <hr></hr>
+      <button style={styles.button} onClick={redirectChoice}>
+        Choices
       </button>
       <hr></hr>
       <button style={styles.button} onClick={handleLogout}>

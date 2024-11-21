@@ -5,7 +5,7 @@ const Header = () => {
   return (
     <header style={styles.header}>
       <nav style={styles.nav}>
-        <h1 style={styles.logo}>Minha Aplicação</h1>
+        <h1 style={styles.logo}>Your Novel</h1>
         <ul style={styles.navList}>
           <li style={styles.navItem}>
             <Link to="/" style={styles.navLink}>Home</Link>
