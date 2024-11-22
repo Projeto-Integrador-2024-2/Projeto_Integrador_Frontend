@@ -12,7 +12,7 @@ function HomePage() {
     <div style={styles.container}>
       <header style={styles.header}>
         <h1 style={styles.title}>Your Novel Dashboard</h1>
-        <p style={styles.subtitle}>Gerencie seus projetos, cenas e escolhas</p>
+        <p style={styles.subtitle}>Manage your Projects, Scenes and Choices!</p>
       </header>
 
       <div style={styles.gridContainer}>
