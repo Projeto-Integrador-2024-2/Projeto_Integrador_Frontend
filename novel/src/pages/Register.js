@@ -34,7 +34,7 @@ export default function Register() {
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             fontFamily: '"Poppins", sans-serif',
-            paddingTop: '20px',
+            paddingTop: '1px',
         },
         title: {
             fontSize: '60px',
@@ -45,7 +45,7 @@ export default function Register() {
             textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)',
             fontFamily: '"Chewy", sans-serif',
             position: 'absolute', // Permite personalizar a posição
-            top: '10%', // Move para o topo da tela
+            top: '12%', // Move para o topo da tela
             left: '50%', // Centraliza horizontalmente
             transform: 'translate(-50%, -50%)', // Corrige o alinhamento central
             display: 'flex',

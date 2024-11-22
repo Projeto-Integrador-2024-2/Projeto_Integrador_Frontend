@@ -36,7 +36,7 @@ export default function Login() {
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             fontFamily: '"Poppins", sans-serif', // Aplica a fonte 'Poppins' globalmente
-            paddingTop: '20px', // Reduz o padding superior
+            paddingTop: '1px', // Reduz o padding superior
         },
         title: { 
             fontSize: '60px',
@@ -47,7 +47,7 @@ export default function Login() {
             textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)',
             fontFamily: '"Chewy", sans-serif',
             position: 'absolute', // Fixa o título no topo da página
-            top: '40px', // Ajuste a distância do topo conforme necessário
+            top: '50px', // Ajuste a distância do topo conforme necessário
             right: '100px', // Alinha o título à direita
         },
         formContainer: {
