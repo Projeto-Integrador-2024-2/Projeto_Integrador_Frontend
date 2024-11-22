@@ -1,77 +1,96 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import Cookies from "js-cookie"; // Biblioteca para manipular cookies
 
 function HomePage() {
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    // Remove o token de autenticação dos cookies
-    Cookies.remove("accessToken");
-    Cookies.remove("refreshToken"); // Opcional: remova também o refresh token
-    navigate("/login"); // Redireciona para a página de login
-  };
-
-  const redirectProject = () => {
-    navigate("/project"); // Redireciona para a página de project
-  };
-
-  const redirectScene = () => {
-    navigate("/scene"); // Redireciona para a página de scene
-  };
-
-  const redirectChoice = () => {
-    navigate("/choice"); // Redireciona para a página de choice
-  };
+  const redirectProject = () => navigate("/project");
+  const redirectScene = () => navigate("/scene");
+  const redirectChoice = () => navigate("/choice");
 
   return (
     <div style={styles.container}>
-      <h1 style={styles.title}>Bem-vindo à Home Page!</h1>
-      <p style={styles.subtitle}>Você está logado com sucesso.</p>
-      <button style={styles.button} onClick={redirectProject}>
-        Projects
-      </button>
-      <hr></hr>
-      <button style={styles.button} onClick={redirectScene}>
-        Scenes
-      </button>
-      <hr></hr>
-      <button style={styles.button} onClick={redirectChoice}>
-        Choices
-      </button>
-      <hr></hr>
-      <button style={styles.button} onClick={handleLogout}>
-        Logout
-      </button>
+      <header style={styles.header}>
+        <h1 style={styles.title}>Your Novel Dashboard</h1>
+        <p style={styles.subtitle}>Gerencie seus projetos, cenas e escolhas</p>
+      </header>
+
+      <div style={styles.gridContainer}>
+        <button style={styles.card} onClick={redirectProject}>
+          <img src="/images/coracao_roxo.png" alt="Projects" style={styles.cardIcon} />
+          <span style={styles.cardTitle}>Projects</span>
+        </button>
+        <button style={styles.card} onClick={redirectScene}>
+          <img src="/images/coracao_roxo.png" alt="Scenes" style={styles.cardIcon} />
+          <span style={styles.cardTitle}>Scenes</span>
+        </button>
+        <button style={styles.card} onClick={redirectChoice}>
+          <img src="/images/coracao_roxo.png" alt="Choices" style={styles.cardIcon} />
+          <span style={styles.cardTitle}>Choices</span>
+        </button>
+      </div>
     </div>
   );
 }
 
-// Estilos simples para a página
 const styles = {
   container: {
+    minHeight: "100vh",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    backgroundColor: "#fef5f8",
+    fontFamily: "'Poppins', sans-serif",
+    padding: "40px",
+  },
+  header: {
     textAlign: "center",
-    marginTop: "100px",
-    backgroundColor: 'pink',
-    fontFamily: "'Arial', sans-serif",
+    marginBottom: "40px",
+    width: "100%",
   },
   title: {
     fontSize: "2.5rem",
-    color: "#333",
+    color: "#7e005f", // Alterada para um tom de azul
+    fontWeight: "bold",
+    textShadow: "2px 2px 4px rgba(0, 0, 0, 0.2)",
   },
   subtitle: {
     fontSize: "1.2rem",
-    color: "#666",
-    marginBottom: "20px",
+    color: "#6b686a", // Alterada para um tom de vermelho
+    marginTop: "10px",
   },
-  button: {
-    padding: "10px 20px",
-    fontSize: "1rem",
-    color: "#fff",
-    backgroundColor: "#007BFF",
-    border: "none",
-    borderRadius: "5px",
+  gridContainer: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: "20px",
+    width: "100%",
+    marginTop: "50px",
+  },
+  card: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#ffffff",
+    borderRadius: "10px",
+    padding: "20px",
+    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+    transition: "transform 0.2s ease, box-shadow 0.2s ease",
     cursor: "pointer",
+    textDecoration: "none",
+    width: "150px",
+  },
+  cardIcon: {
+    width: "30px",
+    height: "30px",
+    marginBottom: "10px",
+  },
+  cardTitle: {
+    fontSize: "1.2rem",
+    color: "#333",
+    fontWeight: "bold",
   },
 };
 
