@@ -1,4 +1,5 @@
 import React from 'react';
+import Cookies from 'js-cookie';
 import { useLocation } from 'react-router-dom';
 import { FaTwitter, FaInstagram, FaFacebook } from 'react-icons/fa';
 
@@ -38,6 +39,8 @@ const Header = () => {
     // Função para lidar com o logout
     const handleLogout = () => {
         // Redirecione para a tela de login ou limpe dados de sessão
+        Cookies.remove('refreshToken');
+        Cookies.remove('accessToken');
         window.location.href = '/login';
     };
 
