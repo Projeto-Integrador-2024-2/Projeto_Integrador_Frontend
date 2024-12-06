@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import api from '../api_access';
 import Cookies from 'js-cookie';
-import './styles.css';
+import '../pages/styles.css';
 
 export default function Project() {
     const [createFormVisible, setCreateFormVisible] = useState(false);

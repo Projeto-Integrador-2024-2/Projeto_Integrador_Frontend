@@ -3,9 +3,9 @@ import HomePage from "./HomePage";
 import Login from "./Login";
 import Header from "./Header";
 import Register from "./Register";
-import Scene from "./Scene";
-import Choice from "./Choice";
-import Project from "./Project";
+import Scene from "../velho/Scene";
+import Choice from "../velho/Choice";
+import Project from "../velho/Project";
 
 import ProtectedRoute from "../services/ProtectedRoute";
 import React from "react";
