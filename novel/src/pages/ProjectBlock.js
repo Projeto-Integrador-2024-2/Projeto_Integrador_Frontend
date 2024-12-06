@@ -2,14 +2,11 @@ import React from "react";
 
 const ProjectBlock = ({ id, name }) => {
   return (
-    <div style={styles.block}>
+    <div 
+      style={styles.block} 
+      onClick={() => window.location.href = `/project/${id}`}
+    >
       <h2 style={styles.name}>{name}</h2>
-      <button 
-        style={styles.button} 
-        onClick={() => window.location.href = `/project/${id}`}
-      >
-        Ver Projeto
-      </button>
     </div>
   );
 };
@@ -17,25 +14,29 @@ const ProjectBlock = ({ id, name }) => {
 const styles = {
   block: {
     border: "1px solid #ccc",
-    padding: "16px",
+    padding: "12px",
     margin: "8px",
     borderRadius: "8px",
     textAlign: "center",
-    maxWidth: "300px",
-    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)"
+    width: "200px",
+    height: "150px",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+    cursor: "pointer", // Indica que o bloco é clicável
+    transition: "transform 0.2s ease", // Animação ao passar o mouse
   },
   name: {
-    fontSize: "1.5em",
-    margin: "0 0 12px 0",
+    fontSize: "1.2em",
+    margin: "0",
   },
-  button: {
-    backgroundColor: "#007bff",
-    color: "#fff",
-    border: "none",
-    padding: "8px 16px",
-    borderRadius: "4px",
-    cursor: "pointer",
-  }
+};
+
+// Adiciona efeito de hover
+styles.block[':hover'] = {
+  transform: "scale(1.05)",
 };
 
 export default ProjectBlock;
