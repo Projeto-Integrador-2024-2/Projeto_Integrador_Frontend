@@ -3,6 +3,7 @@ import HomePage from "./HomePage";
 import Login from "./Login";
 import Header from "./Header";
 import Register from "./Register";
+import ProjectPage from "./ProjectPage";
 import Scene from "../velho/Scene";
 import Choice from "../velho/Choice";
 import Project from "../velho/Project";
@@ -43,12 +44,20 @@ function App() {
             } 
          />
           <Route 
+            path="/project/:projectId" 
+            element={
+              <ProtectedRoute> 
+                <ProjectPage/> 
+              </ProtectedRoute>
+            }
+          />
+          <Route 
             path="/project" 
             element={
               <ProtectedRoute>
                 <Project />
               </ProtectedRoute>
-           } 
+            } 
           />
           <Route 
             path="/scene" 
