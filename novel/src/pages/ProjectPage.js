@@ -6,23 +6,23 @@ import { useParams } from 'react-router-dom';
 
 const ProjectPage = () => {
     const { projectId } = useParams()
-    const [projects, setProjects] = useState([]);
+    const [scenes, setScenes] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        const fetchProjects = async () => {
+        const fetchScenes = async () => {
             console.log({projectId})
 
             const accessToken = Cookies.get("accessToken");
             try {
-                const response = await api.get(`/list/project/${projectId}`, {
+                const response = await api.get(`/list/scene/${projectId}`, {
                     headers: {
                         Authorization: `Bearer ${accessToken}`,
                     },
                 });
                 
-                setProjects(response.data);
+                setScenes(response.data);
             } catch (err) {
                 console.error("Erro ao buscar projetos:", err?.response?.data || err.message);
                 setError("Não foi possível carregar os projetos.");
@@ -31,7 +31,7 @@ const ProjectPage = () => {
             }
         };
 
-        fetchProjects();
+        fetchScenes();
     }, [projectId]); // Rodar novamente quando 'projectId' mudar
 
     if (loading) {
@@ -44,8 +44,8 @@ const ProjectPage = () => {
 
     return (
         <div style={styles.container}>
-            {projects.map((project) => (
-                <ProjectBlock key={project.id} id={project.id} name={project.name} />
+            {scenes.map((scene) => (
+                <ProjectBlock key={scene.id} id={scene.id} name={scene.name} imageUrl={scene.url_background} />
             ))}
         </div>
     );
