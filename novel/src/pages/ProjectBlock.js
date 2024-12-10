@@ -1,11 +1,13 @@
 import React from "react";
 
-const ProjectBlock = ({ id, name }) => {
+const ProjectBlock = ({ id, name, imageUrl }) => {
+  console.log(imageUrl)
   return (
     <div 
       style={styles.block} 
       onClick={() => window.location.href = `/project/${id}`}
     >
+      <img src={imageUrl} alt={name} style={styles.image} />
       <h2 style={styles.name}>{name}</h2>
     </div>
   );
@@ -31,6 +33,11 @@ const styles = {
   name: {
     fontSize: "1.2em",
     margin: "0",
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+    borderRadius: '8px',
   },
 };
 
