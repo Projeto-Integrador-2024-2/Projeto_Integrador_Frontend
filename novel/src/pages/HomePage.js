@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie"; // Certifique-se de que esta biblioteca está instalada
-import ProjectBlock from "./ProjectBlock";
+import { ProjectBlock }  from "./ProjectBlock";
 import api from "../api_access";
 
 const HomePage = () => {
@@ -15,7 +15,7 @@ const HomePage = () => {
       const accessToken = Cookies.get("accessToken");
       //console.log(accessToken)
       try {
-        const response = await api.get("/list/project", {
+        const response = await api.get("list/project/public/", {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
@@ -48,12 +48,6 @@ const HomePage = () => {
   return (
     <div style={styles.page}>
       <div style={styles.container}>
-        {/* Bloco "NEW NOVEL" */}
-        <div style={styles.newProject} onClick={handleNewNovelClick}>
-          <div style={styles.plusIcon}>+</div>
-        </div>
-        <p style={styles.newText}>NEW NOVEL</p> {/* Texto fora do bloco, abaixo */}
-
         {/* Blocos de projetos */}
         <div style={styles.projectsContainer}>
           {projects.map((project) => (

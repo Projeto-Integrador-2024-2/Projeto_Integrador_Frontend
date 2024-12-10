@@ -4,6 +4,9 @@ import Login from "./Login";
 import Header from "./Header";
 import Register from "./Register";
 import ProjectPage from "./ProjectPage";
+import ScenePage from "./ScenePage";
+import SceneCreate from "./SceneCreate";
+import ProjectView from "./ProjectView";
 import Scene from "../velho/Scene";
 import Choice from "../velho/Choice";
 import Project from "../velho/Project";
@@ -90,6 +93,30 @@ function App() {
             element={
               <ProtectedRoute>
                 <ProjectCreate />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/project/view/:projectId" 
+            element={
+              <ProtectedRoute>
+                <ProjectView />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/scene/:sceneId" 
+            element={
+              <ProtectedRoute>
+                <ScenePage />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/scene/create" 
+            element={
+              <ProtectedRoute>
+                <SceneCreate />
               </ProtectedRoute>
             } 
           />

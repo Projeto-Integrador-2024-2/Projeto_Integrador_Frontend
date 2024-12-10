@@ -1,11 +1,40 @@
 import React from "react";
 
+// acha os projeto publico de td mundo e leva pra ver
 const ProjectBlock = ({ id, name, imageUrl }) => {
   console.log(imageUrl)
   return (
     <div 
       style={styles.block} 
+      onClick={() => window.location.href = `/project/view/${id}`}
+    >
+      <img src={imageUrl} alt={name} style={styles.image} />
+      <h2 style={styles.name}>{name}</h2>
+    </div>
+  );
+};
+
+// acha os teus projetos e leva pra editar
+const ProjectBlock2 = ({ id, name, imageUrl }) => {
+  console.log(imageUrl)
+  return (
+    <div 
+      style={styles.block} 
       onClick={() => window.location.href = `/project/${id}`}
+    >
+      <img src={imageUrl} alt={name} style={styles.image} />
+      <h2 style={styles.name}>{name}</h2>
+    </div>
+  );
+};
+
+// mostra as cenas do projeto e leva pra editar elas
+const ProjectBlock3 = ({ id, name, imageUrl }) => {
+  console.log(imageUrl)
+  return (
+    <div 
+      style={styles.block} 
+      onClick={() => window.location.href = `/scene/${id}`}
     >
       <img src={imageUrl} alt={name} style={styles.image} />
       <h2 style={styles.name}>{name}</h2>
@@ -46,4 +75,4 @@ styles.block[':hover'] = {
   transform: "scale(1.05)",
 };
 
-export default ProjectBlock;
+export { ProjectBlock, ProjectBlock2, ProjectBlock3 };
