@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie"; // Certifique-se de que esta biblioteca está instalada
 import ProjectBlock from "./ProjectBlock";
 import api from "../api_access";
@@ -7,6 +8,7 @@ const HomePage = () => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate(); // Hook para navegação
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -31,6 +33,10 @@ const HomePage = () => {
     fetchProjects();
   }, []);
 
+  const handleNewNovelClick = () => {
+    navigate("/project/create"); // Redireciona para o caminho especificado
+  };
+
   if (loading) {
     return <p>Carregando projetos...</p>;
   }
@@ -40,10 +46,26 @@ const HomePage = () => {
   }
 
   return (
-    <div style={styles.container}>
-      {projects.map((project) => (
-        <ProjectBlock key={project.id} id={project.id} name={project.name} imageUrl={project.first_scene.url_background} />
-      ))}
+    <div style={styles.page}>
+      <div style={styles.container}>
+        {/* Bloco "NEW NOVEL" */}
+        <div style={styles.newProject} onClick={handleNewNovelClick}>
+          <div style={styles.plusIcon}>+</div>
+        </div>
+        <p style={styles.newText}>NEW NOVEL</p> {/* Texto fora do bloco, abaixo */}
+
+        {/* Blocos de projetos */}
+        <div style={styles.projectsContainer}>
+          {projects.map((project) => (
+            <ProjectBlock
+              key={project.id}
+              id={project.id}
+              name={project.name}
+              imageUrl={project.first_scene.url_background}
+            />
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
@@ -56,11 +78,12 @@ const styles = {
   },
   container: {
     display: "flex",
+    flexWrap: "wrap",
     flexDirection: "column", // Alinha o conteúdo em coluna
     alignItems: "flex-start", // Alinha no topo
     gap: "16px",
     justifyContent: "flex-start", // Alinha à esquerda
-  },
+  },  
   newProject: {
     display: "flex",
     flexDirection: "column",
@@ -99,7 +122,7 @@ const styles = {
     gap: "16px",
     justifyContent: "center",
     width: "100%",
-  },
+  },  
 };
 
 export default HomePage;
