@@ -18,7 +18,7 @@ const HomePage = () => {
             Authorization: `Bearer ${accessToken}`,
           },
         });
-
+        console.log(response.data)
         setProjects(response.data); 
       } catch (err) {
         console.error("Erro ao buscar projetos:", err.response?.data || err.message);
@@ -42,7 +42,7 @@ const HomePage = () => {
   return (
     <div style={styles.container}>
       {projects.map((project) => (
-        <ProjectBlock key={project.id} id={project.id} name={project.name} />
+        <ProjectBlock key={project.id} id={project.id} name={project.name} imageUrl={project.first_scene.url_background} />
       ))}
     </div>
   );
