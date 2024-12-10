@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '../api_access';
-import Cookies from 'js-cookie';
+//import Cookies from 'js-cookie';
 
 export default function Choice() {
     const [createFormVisible, setCreateFormVisible] = useState(false);

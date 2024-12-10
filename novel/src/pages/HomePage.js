@@ -1,97 +1,128 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie"; // Certifique-se de que esta biblioteca está instalada
+import ProjectBlock from "./ProjectBlock";
+import api from "../api_access";
 
-function HomePage() {
-  const navigate = useNavigate();
+const HomePage = () => {
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate(); // Hook para navegação
 
-  const redirectProject = () => navigate("/project");
-  const redirectScene = () => navigate("/scene");
-  const redirectChoice = () => navigate("/choice");
+  useEffect(() => {
+    const fetchProjects = async () => {
+      const accessToken = Cookies.get("accessToken");
+      //console.log(accessToken)
+      try {
+        const response = await api.get("/list/project", {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        console.log(response.data)
+        setProjects(response.data); 
+      } catch (err) {
+        console.error("Erro ao buscar projetos:", err.response?.data || err.message);
+        setError("Não foi possível carregar os projetos.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProjects();
+  }, []);
+
+  const handleNewNovelClick = () => {
+    navigate("/project/create"); // Redireciona para o caminho especificado
+  };
+
+  if (loading) {
+    return <p>Carregando projetos...</p>;
+  }
+
+  if (error) {
+    return <p>{error}</p>;
+  }
 
   return (
-    <div style={styles.container}>
-      <header style={styles.header}>
-        <h1 style={styles.title}>Your Novel Dashboard</h1>
-        <p style={styles.subtitle}>Manage your Projects, Scenes and Choices!</p>
-      </header>
+    <div style={styles.page}>
+      <div style={styles.container}>
+        {/* Bloco "NEW NOVEL" */}
+        <div style={styles.newProject} onClick={handleNewNovelClick}>
+          <div style={styles.plusIcon}>+</div>
+        </div>
+        <p style={styles.newText}>NEW NOVEL</p> {/* Texto fora do bloco, abaixo */}
 
-      <div style={styles.gridContainer}>
-        <button style={styles.card} onClick={redirectProject}>
-          <img src="/images/coracao_roxo.png" alt="Projects" style={styles.cardIcon} />
-          <span style={styles.cardTitle}>Projects</span>
-        </button>
-        <button style={styles.card} onClick={redirectScene}>
-          <img src="/images/coracao_roxo.png" alt="Scenes" style={styles.cardIcon} />
-          <span style={styles.cardTitle}>Scenes</span>
-        </button>
-        <button style={styles.card} onClick={redirectChoice}>
-          <img src="/images/coracao_roxo.png" alt="Choices" style={styles.cardIcon} />
-          <span style={styles.cardTitle}>Choices</span>
-        </button>
+        {/* Blocos de projetos */}
+        <div style={styles.projectsContainer}>
+          {projects.map((project) => (
+            <ProjectBlock
+              key={project.id}
+              id={project.id}
+              name={project.name}
+              imageUrl={project.first_scene.url_background}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
-}
+};
 
 const styles = {
-  container: {
+  page: {
+    backgroundColor: "#ffe4f2", // Fundo rosa claro
     minHeight: "100vh",
+    padding: "16px",
+  },
+  container: {
     display: "flex",
-    flexDirection: "column",
-    justifyContent: "flex-start",
-    alignItems: "center",
-    backgroundColor: "#fef5f8",
-    fontFamily: "'Poppins', sans-serif",
-    padding: "40px",
-  },
-  header: {
-    textAlign: "center",
-    marginBottom: "40px",
-    width: "100%",
-  },
-  title: {
-    fontSize: "2.5rem",
-    color: "#7e005f", // Alterada para um tom de azul
-    fontWeight: "bold",
-    textShadow: "2px 2px 4px rgba(0, 0, 0, 0.2)",
-  },
-  subtitle: {
-    fontSize: "1.2rem",
-    color: "#6b686a", // Alterada para um tom de vermelho
-    marginTop: "10px",
-  },
-  gridContainer: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    gap: "20px",
-    width: "100%",
-    marginTop: "50px",
-  },
-  card: {
+    flexWrap: "wrap",
+    flexDirection: "column", // Alinha o conteúdo em coluna
+    alignItems: "flex-start", // Alinha no topo
+    gap: "16px",
+    justifyContent: "flex-start", // Alinha à esquerda
+  },  
+  newProject: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#ffffff",
-    borderRadius: "10px",
-    padding: "20px",
-    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-    transition: "transform 0.2s ease, box-shadow 0.2s ease",
+    backgroundColor: "#eda1d5",
+    borderRadius: "16px",
+    padding: "16px",
+    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
     cursor: "pointer",
-    textDecoration: "none",
-    width: "150px",
+    width: "100px",
+    height: "100px",
+    position: "relative", // Para manter o ícone centralizado dentro do bloco
+    marginTop: "15px",
   },
-  cardIcon: {
-    width: "30px",
-    height: "30px",
-    marginBottom: "10px",
+  plusIcon: {
+    fontSize: "100px", // Aumenta o tamanho do ícone
+    fontWeight: "bold", // Torna o ícone mais grosso (se o ícone suportar)
+    color: "#ffff",
+    position: "absolute", // Centraliza o ícone dentro do bloco
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
   },
-  cardTitle: {
-    fontSize: "1.2rem",
-    color: "#333",
+  newText: {
+    marginTop: "0.5px", // Ajuste para mover o texto para baixo do bloco
+    marginLeft: "22px", // Ajuste para mover o texto para a direita
+    color: "#000000", // Cor do texto "NEW NOVEL" com correspondência ao bloco
     fontWeight: "bold",
+    textAlign: "left", // Alinha o texto à esquerda para o efeito de deslocamento para a direita
+    fontFamily: '"Poppins", sans-serif',
   },
+  projectsContainer: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+    gap: "16px",
+    justifyContent: "center",
+    width: "100%",
+  },  
 };
 
 export default HomePage;

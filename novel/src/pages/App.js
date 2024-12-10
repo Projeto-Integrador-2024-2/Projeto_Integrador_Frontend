@@ -3,12 +3,15 @@ import HomePage from "./HomePage";
 import Login from "./Login";
 import Header from "./Header";
 import Register from "./Register";
-import Scene from "./Scene";
-import Choice from "./Choice";
-import Project from "./Project";
+import ProjectPage from "./ProjectPage";
+import Scene from "../velho/Scene";
+import Choice from "../velho/Choice";
+import Project from "../velho/Project";
 
 import ProtectedRoute from "../services/ProtectedRoute";
 import React from "react";
+import Profile from "./Profile";
+import ProjectCreate from "./ProjectCreate";
 
 const globalStyles = {
   margin: 0,
@@ -43,12 +46,20 @@ function App() {
             } 
          />
           <Route 
+            path="/project/:projectId" 
+            element={
+              <ProtectedRoute> 
+                <ProjectPage/> 
+              </ProtectedRoute>
+            }
+          />
+          <Route 
             path="/project" 
             element={
               <ProtectedRoute>
                 <Project />
               </ProtectedRoute>
-           } 
+            } 
           />
           <Route 
             path="/scene" 
@@ -63,6 +74,22 @@ function App() {
             element={
               <ProtectedRoute>
                 <Choice />
+              </ProtectedRoute>
+            } 
+          />
+            <Route 
+            path="/profile" 
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/project/create" 
+            element={
+              <ProtectedRoute>
+                <ProjectCreate />
               </ProtectedRoute>
             } 
           />
