@@ -64,11 +64,6 @@ const Header = () => {
         window.location.href = '/login'; // Redireciona para a página de login
     };
 
-    // Função para redirecionar para a página de perfil
-    const handleProfileClick = () => {
-        navigate('/profile'); // Usando o hook useNavigate para navegar para a tela de perfil
-    };
-
     // Verifica se a página atual é Login ou Register
     if (location.pathname === '/login' || location.pathname === '/register') {
         return renderContentForLoginAndRegister();
