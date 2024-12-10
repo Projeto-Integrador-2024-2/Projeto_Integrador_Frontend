@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Cookies from 'js-cookie';
-import { useLocation } from 'react-router-dom';
-import { FaTwitter, FaInstagram, FaFacebook } from 'react-icons/fa';
+import { useLocation, useNavigate } from 'react-router-dom'; // Adicionando useNavigate
+import { FaTwitter, FaInstagram, FaFacebook, FaUser } from 'react-icons/fa';
 
 const Header = () => {
     const location = useLocation();
+    const navigate = useNavigate(); // Hook de navegação
+    const [menuOpen, setMenuOpen] = useState(false); // Controle do estado do menu suspenso
 
     // Função para renderizar o conteúdo para Login e Register
     const renderContentForLoginAndRegister = () => (
@@ -28,20 +30,43 @@ const Header = () => {
     const renderContentForMainScreens = () => (
         <div style={{ ...styles.container, ...styles.mainContainer }}>
             <h1 style={{ ...styles.title, ...styles.mainTitle }}>Your Novel</h1>
-            <div style={styles.logoutContainer}>
-                <span style={styles.logoutText} onClick={handleLogout}>
-                    Logout
-                </span>
+            {/* Ícone de perfil */}
+            <div style={styles.profileContainer}>
+                <FaUser 
+                    style={styles.profileIcon} 
+                    onClick={() => setMenuOpen(!menuOpen)} // Alterna o estado do menu
+                />
+                {menuOpen && (
+                    <div style={styles.dropdownMenu}>
+                        <div
+                            style={styles.menuItem}
+                            onClick={() => {
+                                setMenuOpen(false); // Fecha o menu
+                                navigate('/profile'); // Redireciona para a página de perfil
+                            }}
+                        >
+                            Perfil
+                        </div>
+                        <div style={styles.menuItem}>Settings</div>
+                        <div style={styles.menuItem} onClick={handleLogout}>Logout</div>
+                    </div>
+                )}
             </div>
         </div>
     );
 
+
     // Função para lidar com o logout
     const handleLogout = () => {
-        // Redirecione para a tela de login ou limpe dados de sessão
+        // Redireciona para a tela de login e limpa dados de sessão
         Cookies.remove('refreshToken');
         Cookies.remove('accessToken');
-        window.location.href = '/login';
+        window.location.href = '/login'; // Redireciona para a página de login
+    };
+
+    // Função para redirecionar para a página de perfil
+    const handleProfileClick = () => {
+        navigate('/profile'); // Usando o hook useNavigate para navegar para a tela de perfil
     };
 
     // Verifica se a página atual é Login ou Register
@@ -76,6 +101,36 @@ const styles = {
         color: '#7e005f',
         cursor: 'pointer',
         transition: 'color 0.3s',
+    },
+    profileContainer: {
+        position: 'relative', // Para o menu suspenso aparecer em relação ao ícone
+    },
+    profileIcon: {
+        fontSize: '30px',
+        color: '#fff',
+        cursor: 'pointer',
+        transition: 'color 0.3s',
+    },
+    dropdownMenu: {
+        position: 'absolute',
+        top: '35px',
+        right: '0',
+        backgroundColor: '#fff',
+        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+        borderRadius: '8px',
+        width: '180px',
+        zIndex: 10,
+        opacity: 1,
+        animation: 'fadeIn 0.3s ease-out', // Animação para abrir o menu
+    },
+    menuItem: {
+        padding: '12px 16px', // Maior padding para espaçamento entre itens
+        cursor: 'pointer',
+        transition: 'background-color 0.3s, padding-left 0.2s',
+    },
+    menuItemHover: {
+        backgroundColor: '#f1f1f1',
+        paddingLeft: '20px', // Efeito de deslocamento à esquerda no hover
     },
     logoutContainer: {
         display: 'flex',

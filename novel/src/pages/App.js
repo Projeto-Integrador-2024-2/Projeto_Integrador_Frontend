@@ -10,6 +10,7 @@ import Project from "../velho/Project";
 
 import ProtectedRoute from "../services/ProtectedRoute";
 import React from "react";
+import Profile from "./Profile";
 
 const globalStyles = {
   margin: 0,
@@ -72,6 +73,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Choice />
+              </ProtectedRoute>
+            } 
+          />
+            <Route 
+            path="/profile" 
+            element={
+              <ProtectedRoute>
+                <Profile />
               </ProtectedRoute>
             } 
           />
