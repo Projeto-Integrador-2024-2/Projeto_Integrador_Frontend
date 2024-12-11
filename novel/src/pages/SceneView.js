@@ -12,9 +12,9 @@ const Scene = ({
     <div style={styles.wrapper}>
       <div style={{ ...styles.container, backgroundImage: `url(${urlBackground})` }}>
         <div style={styles.characters}>
-          {urlCharacterLeft && <img src={urlCharacterLeft} alt="Character Left" style={styles.characterLeft} />}
-          {urlCharacterMiddle && <img src={urlCharacterMiddle} alt="Character Middle" style={styles.characterMiddle} />}
-          {urlCharacterRight && <img src={urlCharacterRight} alt="Character Right" style={styles.characterRight} />}
+          {urlCharacterLeft && <img src={urlCharacterLeft} alt="Character Left" style={{ ...styles.character, ...styles.characterLeft }} />}
+          {urlCharacterMiddle && <img src={urlCharacterMiddle} alt="Character Middle" style={{ ...styles.character, ...styles.characterMiddle }} />}
+          {urlCharacterRight && <img src={urlCharacterRight} alt="Character Right" style={{ ...styles.character, ...styles.characterRight }} />}
         </div>
         <div style={styles.textBoxContainer}>
           {urlTextBox && <img src={urlTextBox} alt="Text Box" style={styles.textBox} />}
@@ -23,14 +23,14 @@ const Scene = ({
       </div>
     </div>
   );
-};
+}
 
 const styles = {
   wrapper: {
     display: "flex",
     justifyContent: "center",
-    alignItems: "center",
-    height: "100vh",
+    //alignItems: "center",
+    //height: "100vh",
     //backgroundColor: "#000",
   },
   container: {
@@ -52,23 +52,28 @@ const styles = {
   characters: {
     position: "absolute",
     bottom: "20%",
+    maxWidth: "1200px",
     width: "100%",
-    display: "flex",
-    justifyContent: "space-around",
+    //display: "flex",
+    justifyContent: "space-between", // Ajusta a posição dos personagens
     alignItems: "flex-end",
-    padding: "0 5%",
+    //padding: "0 5%",
+    overflow: "hidden", // Garante que os personagens não saiam do contêiner
+  },
+  character: {
+    height: "500px",
+    maxHeight: "100%", // Limita a altura máxima dos personagens
+    maxWidth: "33%", // Limita a largura máxima dos personagens
+    objectFit: "contain",
   },
   characterLeft: {
-    height: "60%",
-    objectFit: "contain",
+    alignSelf: "flex-start",
   },
   characterMiddle: {
-    height: "70%",
-    objectFit: "contain",
+    alignSelf: "center",
   },
   characterRight: {
-    height: "60%",
-    objectFit: "contain",
+    alignSelf: "flex-end",
   },
   textBoxContainer: {
     position: "relative",
@@ -89,14 +94,17 @@ const styles = {
     zIndex: 1,
   },
   text: {
-  position: "relative", // Não mais absoluto, ajustado pelo container
-  color: "#fff",
-  fontSize: "18px",
-  fontWeight: "bold",
-  textAlign: "left",
-  textShadow: "2px 2px 4px rgba(0, 0, 0, 0.7)", // Para destaque extra
-  lineHeight: "1.5",
-},
+    position: "relative", // Não mais absoluto, ajustado pelo container
+    color: "#fff",
+    fontSize: "18px",
+    fontWeight: "bold",
+    textAlign: "left",
+    textShadow: "2px 2px 4px rgba(0, 0, 0, 0.7)", // Para destaque extra
+    lineHeight: "1.5",
+  },
 };
+
+
+
 
 export default Scene;

@@ -28,10 +28,19 @@ const ProjectView = () => {
             Authorization: `Bearer ${accessToken}`,
           },
         });
+
         console.log(sceneResponse.data)
-        console.log(choiceResponse.data)
         setScenes(sceneResponse.data);
-        setChoices(choiceResponse.data);
+        if (choiceResponse.status === 204) { //Se der 204 não da problema
+          console.log([])
+          setChoices([]);
+
+        } else {
+          console.log(choiceResponse.data)
+          setChoices(choiceResponse.data);
+
+        }
+
       } catch (err) {
         console.error("Erro ao buscar cenas:", err?.sceneResponse?.data || err.message);
         setError("Não foi possível carregar as cenas.");
@@ -75,9 +84,9 @@ const ProjectView = () => {
             urlCharacterRight={currentScene.url_character_right}
             text={currentScene.text}
           />
-          <div>
+          <div style={styles.buttonContainer}>
             {currentChoices.map(choice => (
-              <button key={choice.id} onClick={() => handleChoice(choice.to_scene)}>
+              <button style={styles.button} key={choice.id} onClick={() => handleChoice(choice.to_scene)}>
                 {choice.text}
               </button>
             ))}
@@ -90,4 +99,26 @@ const ProjectView = () => {
   );
 
 }
+
+const styles = {
+  buttonContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    height: '100vh',
+    // Ajuste conforme necessário 
+  },
+  button: { padding: '10px 20px',
+    fontSize: '16px',
+    fontWeight: 'bold',
+    color: '#fff',
+    background: 'linear-gradient(45deg, #6a11cb, #2575fc)',
+    border: 'none',
+    borderRadius: '25px',
+    boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
+    cursor: 'pointer',
+    transition: 'all 0.3s ease',
+  },
+};
+
 export default ProjectView;

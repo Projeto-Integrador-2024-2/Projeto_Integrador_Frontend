@@ -20,7 +20,7 @@ const HomePage = () => {
             Authorization: `Bearer ${accessToken}`,
           },
         });
-        console.log(response.data)
+        //console.log(response.data)
         setProjects(response.data); 
       } catch (err) {
         console.error("Erro ao buscar projetos:", err.response?.data || err.message);
