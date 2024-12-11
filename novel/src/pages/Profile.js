@@ -3,8 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import Cookies from "js-cookie";
 import api from '../api_access';
 import { ProjectBlock2 } from "./ProjectBlock";
-import "slick-carousel/slick/slick.css"; 
-import "slick-carousel/slick/slick-theme.css";
 
 
 const Profile = () => {
@@ -38,12 +36,12 @@ const Profile = () => {
 
           // Busca a descrição associada ao usuário
           try {
-            const descriptionResponse = await api.get(`/list/description/${profileData.id}`, {
+            const descriptionResponse = await api.get(`/list/description?user_id=${profileData.id}`, {
               headers: {
                 Authorization: `Bearer ${accessToken}`,
               },
             });
-            description = descriptionResponse.data.description || description;
+            description = descriptionResponse.data[0].description || description;
           } catch (descError) {
             console.error("Erro ao buscar descrição:", descError.response?.data || descError.message);
           }
@@ -68,7 +66,7 @@ const Profile = () => {
             Authorization: `Bearer ${accessToken}`,
           },
         });
-        console.log(response.data);
+        //console.log(response.data);
         setProjects(response.data); 
       } catch (err) {
         console.error("Erro ao buscar projetos:", err.response?.data || err.message);

@@ -2,7 +2,7 @@ import React from "react";
 
 // acha os projeto publico de td mundo e leva pra ver
 const ProjectBlock = ({ id, name, imageUrl }) => {
-  console.log(imageUrl)
+  //console.log(imageUrl)
   return (
     <div 
       style={styles.block} 
@@ -16,7 +16,7 @@ const ProjectBlock = ({ id, name, imageUrl }) => {
 
 // acha os teus projetos e leva pra editar
 const ProjectBlock2 = ({ id, name, imageUrl }) => {
-  console.log(imageUrl)
+  //console.log(imageUrl)
   return (
     <div 
       style={styles.block} 
@@ -30,7 +30,7 @@ const ProjectBlock2 = ({ id, name, imageUrl }) => {
 
 // mostra as cenas do projeto e leva pra editar elas
 const ProjectBlock3 = ({ id, name, imageUrl }) => {
-  console.log(imageUrl)
+  //console.log(imageUrl)
   return (
     <div 
       style={styles.block} 
