@@ -33,10 +33,6 @@ const HomePage = () => {
     fetchProjects();
   }, []);
 
-  const handleNewNovelClick = () => {
-    navigate("/project/create"); // Redireciona para o caminho especificado
-  };
-
   if (loading) {
     return <p>Carregando projetos...</p>;
   }

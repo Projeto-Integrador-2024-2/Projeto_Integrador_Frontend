@@ -2,7 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Cookies from "js-cookie";
 import api from '../api_access';
-import { ProjectBlock2 }  from "./ProjectBlock";
+import { ProjectBlock2 } from "./ProjectBlock";
+import "slick-carousel/slick/slick.css"; 
+import "slick-carousel/slick/slick-theme.css";
+
 
 const Profile = () => {
   const [profile, setProfile] = useState(null); // Estado para armazenar dados do perfil
@@ -22,23 +25,32 @@ const Profile = () => {
 
       try {
         // Busca o perfil associado ao token
-        const response = await api.get("/list/user", {
+        const userResponse = await api.get("/list/user", {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         });
 
-        // Verifique a resposta da API
-        console.log("Resposta da API:", response);
+        const profileData = userResponse.data[0]; // Pegando o primeiro usuário
 
-        // Supondo que a resposta seja um array de usuários
-        const profileData = response.data[0]; // Pegando o primeiro usuário
+        if (profileData) {
+          let description = "Nenhuma descrição disponível.";
 
-        // Verifique se o usuário existe e se possui o campo 'username'
-        if (profileData && profileData.username) {
+          // Busca a descrição associada ao usuário
+          try {
+            const descriptionResponse = await api.get(`/list/description/${profileData.id}`, {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            });
+            description = descriptionResponse.data.description || description;
+          } catch (descError) {
+            console.error("Erro ao buscar descrição:", descError.response?.data || descError.message);
+          }
+
           setProfile({
-            name: profileData.username || "Nome indisponível", // Usando 'username' ao invés de 'name'
-            description: profileData.description || "Nenhuma descrição disponível.", // Caso não haja descrição
+            name: profileData.username || "Nome indisponível",
+            description: description,
           });
         } else {
           console.error("Dados de perfil não encontrados:", profileData);
@@ -48,8 +60,6 @@ const Profile = () => {
       }
     };
 
-    fetchProfile();
-
     const fetchProjects = async () => {
       const accessToken = Cookies.get("accessToken");
       try {
@@ -58,7 +68,7 @@ const Profile = () => {
             Authorization: `Bearer ${accessToken}`,
           },
         });
-        console.log(response.data)
+        console.log(response.data);
         setProjects(response.data); 
       } catch (err) {
         console.error("Erro ao buscar projetos:", err.response?.data || err.message);
@@ -68,6 +78,7 @@ const Profile = () => {
       }
     };
 
+    fetchProfile();
     fetchProjects();
   }, []);
 
@@ -75,13 +86,13 @@ const Profile = () => {
     navigate("/profile/edit"); // Redireciona para a página de edição de perfil
   };
 
+  const handleNewProject = () => {
+    navigate("/project/create"); // Redireciona para a página de criação de projeto
+  };
+
   if (!profile) {
     return <p style={styles.loadingText}>Carregando informações do perfil...</p>;
   }
-
-  const handleNewNovelClick = () => {
-    navigate("/project/create"); // Redireciona para o caminho especificado
-  };
 
   if (loading) {
     return <p>Carregando projetos...</p>;
@@ -90,6 +101,17 @@ const Profile = () => {
   if (error) {
     return <p>{error}</p>;
   }
+
+  const settings = {
+    dots: true, // Exibe pontos de navegação
+    infinite: true, // Habilita o loop infinito
+    speed: 500, // Velocidade da transição
+    slidesToShow: 1, // Número de slides visíveis por vez
+    slidesToScroll: 1, // Número de slides a serem rolados por vez
+    autoplay: true, // Ativa o autoplay
+    autoplaySpeed: 2000, // Intervalo do autoplay (em milissegundos)
+    arrows: true, // Habilita setas de navegação
+  };
 
   return (
     <div style={styles.page}>
@@ -103,31 +125,22 @@ const Profile = () => {
           <button style={styles.button} onClick={handleEditProfile}>
             Editar Perfil
           </button>
+          <button style={styles.button} onClick={handleNewProject}> {/* Redireciona para a criação de projeto */}
+            New Project
+          </button>
         </div>
         <div style={styles.rightSection}>
-          <p style={styles.details}>
-            Aqui você pode exibir informações adicionais, como histórico, atividades recentes ou outras funcionalidades do perfil.
-          </p>
-        </div>
-      </div>
-
-      <div style={styles.container}>
-        {/* Bloco "NEW NOVEL" */}
-        <div style={styles.newProject} onClick={handleNewNovelClick}>
-          <div style={styles.plusIcon}>+</div>
-        </div>
-        <p style={styles.newText}>NEW NOVEL</p> {/* Texto fora do bloco, abaixo */}
-
-        {/* Blocos de projetos */}
-        <div style={styles.projectsContainer}>
-          {projects.map((project) => (
-            <ProjectBlock2
-              key={project.id}
-              id={project.id}
-              name={project.name}
-              imageUrl={project.first_scene.url_background}
-            />
-          ))}
+          <div style={styles.projectsContainer}>
+            {/* Blocos de projetos */}
+            {projects.map((project) => (
+              <ProjectBlock2
+                key={project.id}
+                id={project.id}
+                name={project.name}
+                imageUrl={project.first_scene.url_background}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </div>
@@ -138,19 +151,25 @@ const Profile = () => {
 const styles = {
   page: {
     display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'flex-start',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
     minHeight: '100vh',
     backgroundColor: '#f0f0f0',
-    padding: '90px 20px',
+    padding: '0',
+    margin: '0',
   },
   container: {
     display: 'flex',
+    flexDirection: 'row',
     width: '80%',
     backgroundColor: '#fff',
     borderRadius: '8px',
     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
     overflow: 'hidden',
+    marginBottom: '20px',
+    position: 'absolute',
+    top: '150px',
   },
   leftSection: {
     flex: '30%',
@@ -202,55 +221,21 @@ const styles = {
     cursor: 'pointer',
     transition: 'background-color 0.3s',
   },
-  details: {
-    fontSize: '16px',
-    color: '#333',
-    lineHeight: '1.5',
-  },
   loadingText: {
     fontSize: '18px',
     color: '#333',
     fontWeight: 'bold',
   },
-  newText: {
-    marginTop: "0.5px", // Ajuste para mover o texto para baixo do bloco
-    marginLeft: "22px", // Ajuste para mover o texto para a direita
-    color: "#000000", // Cor do texto "NEW NOVEL" com correspondência ao bloco
-    fontWeight: "bold",
-    textAlign: "left", // Alinha o texto à esquerda para o efeito de deslocamento para a direita
-    fontFamily: '"Poppins", sans-serif',
-  },
-  plusIcon: {
-    fontSize: "100px", // Aumenta o tamanho do ícone
-    fontWeight: "bold", // Torna o ícone mais grosso (se o ícone suportar)
-    color: "#ffff",
-    position: "absolute", // Centraliza o ícone dentro do bloco
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-  },
-  newProject: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#eda1d5",
-    borderRadius: "16px",
-    padding: "16px",
-    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-    cursor: "pointer",
-    width: "100px",
-    height: "100px",
-    position: "relative", // Para manter o ícone centralizado dentro do bloco
-    marginTop: "15px",
-  },
   projectsContainer: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-    gap: "16px",
-    justifyContent: "center",
-    width: "100%",
-  }, 
+    display: "flex",
+    justifyContent: "center",  // Alinha os itens horizontalmente no centro
+    flexWrap: "wrap",          // Permite que os itens que não cabem na linha sejam movidos para a próxima linha
+    gap: "16px",               // Espaço entre os itens
+    marginTop: "50px",
+    marginLeft: "50px",
+    width: "80%",              // Pode ajustar conforme necessário
+    padding: "10px 0",         // Ajuste de padding conforme necessário
+  }
 };
 
 export default Profile;
