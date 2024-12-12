@@ -156,7 +156,7 @@ const ProfileEdit = () => {
             style={styles.input}
           />
 
-          <label style={styles.label}>Confirme sua Nova Senha:</label>
+          <label style={styles.label}>Confirme a Nova Senha:</label>
           <input
             type="password"
             value={confirmPassword}
