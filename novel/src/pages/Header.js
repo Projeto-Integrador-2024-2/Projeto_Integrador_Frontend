@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Cookies from 'js-cookie';
 import { useLocation, useNavigate } from 'react-router-dom'; // Adicionando useNavigate
 import { FaTwitter, FaInstagram, FaFacebook, FaUser } from 'react-icons/fa';
+import { IoArrowBack } from 'react-icons/io5'; // Ícone de seta de voltar
 
 const Header = () => {
     const location = useLocation();
@@ -29,6 +30,13 @@ const Header = () => {
     // Função para renderizar o conteúdo padrão do Header
     const renderContentForMainScreens = () => (
         <div style={{ ...styles.container, ...styles.mainContainer }}>
+            {/* Botão de voltar */}
+            {location.pathname !== '/login' && location.pathname !== '/register' && (
+                <IoArrowBack 
+                    style={styles.backButton} 
+                    onClick={() => navigate(-1)} // Navega para a página anterior
+                />
+            )}
             <h1 style={{ ...styles.title, ...styles.mainTitle }}>Your Novel</h1>
             {/* Ícone de perfil */}
             <div style={styles.profileContainer}>
@@ -54,7 +62,6 @@ const Header = () => {
             </div>
         </div>
     );
-
 
     // Função para lidar com o logout
     const handleLogout = () => {
@@ -116,43 +123,31 @@ const styles = {
         width: '180px',
         zIndex: 10,
         opacity: 1,
-        animation: 'fadeIn 0.3s ease-out', // Animação para abrir o menu
+        animation: 'fadeIn 0.3s ease-out',
     },
     menuItem: {
-        padding: '12px 16px', // Maior padding para espaçamento entre itens
+        padding: '12px 16px',
         cursor: 'pointer',
         transition: 'background-color 0.3s, padding-left 0.2s',
     },
-    menuItemHover: {
-        backgroundColor: '#f1f1f1',
-        paddingLeft: '20px', // Efeito de deslocamento à esquerda no hover
-    },
-    logoutContainer: {
-        display: 'flex',
-        alignItems: 'center',
-    },
-    logoutText: {
-        fontSize: '20px',
-        color: '#fff', // Cor branca para o texto de Logout
-        fontWeight: 'bold',
+    backButton: {
+        fontSize: '24px',
+        color: '#fff',
         cursor: 'pointer',
-        textDecoration: 'underline',
-        transition: 'color 0.3s',
+        marginRight: '-1100px', // Reduz a margem da seta para movê-la mais para a esquerda
     },
-    // Estilos específicos para Login e Register
     loginRegisterContainer: {
-        backgroundColor: '#fff', // Fundo branco
+        backgroundColor: '#fff', 
     },
     loginRegisterTitle: {
-        color: '#7e005f', // Título colorido
+        color: '#7e005f',
         textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)',
     },
-    // Estilos específicos para as telas principais
     mainContainer: {
-        backgroundColor: '#7e005f', // Fundo colorido
+        backgroundColor: '#7e005f',
     },
     mainTitle: {
-        color: '#fff', // Título branco
+        color: '#fff',
     },
 };
 

@@ -5,6 +5,7 @@ import api from '../api_access';
 
 const ProfileEdit = () => {
   const [user, setUser] = useState({ id: null, username: '', email: '', password: '', description: '' });
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
@@ -39,12 +40,11 @@ const ProfileEdit = () => {
           } catch (descError) {
             console.error('Erro ao buscar descrição:', descError.response?.data || descError.message);
           }
-          console.log(userResponse.data[0])
           setUser({
-            id: userData.id, // Incluindo ID no estado
+            id: userData.id,
             username: userData.username || '',
             email: userData.email || '',
-            password: '', // Deixe vazio para que o usuário insira uma nova senha
+            password: '',
             description: description,
           });
         }
@@ -64,6 +64,10 @@ const ProfileEdit = () => {
     setUser((prevUser) => ({ ...prevUser, [name]: value }));
   };
 
+  const handleConfirmPasswordChange = (e) => {
+    setConfirmPassword(e.target.value);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const accessToken = Cookies.get('accessToken');
@@ -76,6 +80,11 @@ const ProfileEdit = () => {
     if (!user.id) {
       console.error('ID do usuário não definido.');
       setError('Erro ao atualizar: ID do usuário não definido.');
+      return;
+    }
+
+    if (user.password !== confirmPassword) {
+      alert('As senhas não coincidem.');
       return;
     }
 
@@ -116,8 +125,8 @@ const ProfileEdit = () => {
     <div style={styles.page}>
       <div style={styles.titleContainer}>
         <h1 style={styles.title}>Editar Perfil</h1>
-        </div>
-        <div style={styles.formContainer}>
+      </div>
+      <div style={styles.formContainer}>
         {successMessage && <p style={styles.successText}>{successMessage}</p>}
         <form onSubmit={handleSubmit} style={styles.form}>
           <label style={styles.label}>Nome de Usuário:</label>
@@ -138,7 +147,7 @@ const ProfileEdit = () => {
             style={styles.input}
           />
 
-          <label style={styles.label}>Senha:</label>
+          <label style={styles.label}>Nova Senha:</label>
           <input
             type="password"
             name="password"
@@ -146,7 +155,14 @@ const ProfileEdit = () => {
             onChange={handleInputChange}
             style={styles.input}
           />
-          
+
+          <label style={styles.label}>Confirme a Nova Senha:</label>
+          <input
+            type="password"
+            value={confirmPassword}
+            onChange={handleConfirmPasswordChange}
+            style={styles.input}
+          />
 
           <label style={styles.label}>Descrição:</label>
           <textarea
@@ -180,24 +196,24 @@ const styles = {
     backgroundColor: "#fff0f8",
     paddingTop: '40px',
   },
-  titleContainer: { 
+  titleContainer: {
     width: '40%',
     height: '30px',
-    backgroundColor: '#f7d0e5', 
-    padding: '20px', 
-    borderRadius: '8px 8px 0 0', 
-    boxShadow: '0 0px 8px rgba(0, 0, 0, 0.2)', 
-    textAlign: 'center', 
-    marginTop: '-130px',
+    backgroundColor: '#f7d0e5',
+    padding: '20px',
+    borderRadius: '8px 8px 0 0',
+    boxShadow: '0 0px 8px rgba(0, 0, 0, 0.2)',
+    textAlign: 'center',
+    marginTop: '-90px',
   },
-  formContainer: { 
-    width: '40%', 
-    backgroundColor: '#fce1f0', 
-    padding: '20px', 
+  formContainer: {
+    width: '40%',
+    backgroundColor: '#fce1f0',
+    padding: '20px',
     borderRadius: '0 0 8px 8px',
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)', 
-    textAlign: 'center', 
-},
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+    textAlign: 'center',
+  },
   title: {
     fontSize: '24px',
     fontWeight: 'bold',
@@ -211,12 +227,13 @@ const styles = {
     textAlign: 'left',
   },
   input: {
-    width: '95%',
+    width: '100%',
     padding: '10px',
     fontSize: '16px',
     marginBottom: '20px',
     border: '1px solid #ddd',
     borderRadius: '4px',
+    boxSizing: 'border-box',
   },
   textarea: {
     width: '100%',
@@ -231,6 +248,7 @@ const styles = {
   buttonContainer: {
     display: 'flex',
     justifyContent: 'space-between',
+    gap: '10px',
   },
   saveButton: {
     backgroundColor: '#7e005f',
@@ -242,8 +260,8 @@ const styles = {
     fontSize: '16px',
   },
   cancelButton: {
-    backgroundColor: '#ddd',
-    color: '#333',
+    backgroundColor: '#fc97e3',
+    color: '#ffff',
     padding: '10px 20px',
     border: 'none',
     borderRadius: '4px',
