@@ -20,16 +20,16 @@ const Profile = () => {
         console.error("Token de acesso não encontrado");
         return;
       }
-
+      
       try {
         // Busca o perfil associado ao token
-        const userResponse = await api.get("/list/user", {
+        const userResponse = await api.get("/list/user/current", {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         });
-
-        const profileData = userResponse.data[0]; // Pegando o primeiro usuário
+        
+        const profileData = userResponse.data; // Pegando o primeiro usuário
 
         if (profileData) {
           let description = "Nenhuma descrição disponível.";

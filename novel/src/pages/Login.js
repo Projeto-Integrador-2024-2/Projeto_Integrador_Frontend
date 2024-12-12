@@ -21,7 +21,11 @@ export default function Login() {
                 window.location.href = '/';
             }
         } catch (error) {
-            console.error(error);
+            if (error.response && (error.response.status === 400 || error.response.status === 401)) {
+                alert('Usuário ou senha incorretos. Por favor, tente novamente.');
+            } else {
+                console.error(error);
+            }
         }
     };
 
@@ -110,7 +114,6 @@ export default function Login() {
             textAlign: 'center',
         }
     };
-    
 
     return (
         <div style={styles.container}>

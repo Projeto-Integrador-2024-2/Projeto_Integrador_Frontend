@@ -4,12 +4,18 @@ import api from '../api_access';
 
 export default function Register() {
     const [username, setUsername] = useState('');
+    const [email, setEmail] = useState(''); // Novo estado para o email
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState(''); // Novo estado para confirmação da senha
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (password !== confirmPassword) {
+            alert('As senhas não coincidem. Por favor, tente novamente.');
+            return;
+        }
         try {
-            const response = await api.post('create/user', { username, password });
+            const response = await api.post('create/user', { username, email, password });
             if (response.status === 201) {
                 // Redireciona para a página de login após o sucesso
                 window.location.href = '/login';
@@ -136,12 +142,34 @@ export default function Register() {
                         />
                     </div>
                     <div style={{ marginBottom: '20px' }}>
+                        <label style={styles.inputLabel}>Email :</label>
+                        <input
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="Enter your email"
+                            style={styles.inputField}
+                            required
+                        />
+                    </div>
+                    <div style={{ marginBottom: '20px' }}>
                         <label style={styles.inputLabel}>Password :</label>
                         <input
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             placeholder="Enter your password"
+                            style={styles.inputField}
+                            required
+                        />
+                    </div>
+                    <div style={{ marginBottom: '20px' }}>
+                        <label style={styles.inputLabel}>Confirm Password :</label>
+                        <input
+                            type="password"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            placeholder="Confirm your password"
                             style={styles.inputField}
                             required
                         />
