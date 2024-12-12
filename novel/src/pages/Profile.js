@@ -153,7 +153,7 @@ const styles = {
     justifyContent: 'flex-start',
     alignItems: 'center',
     minHeight: '100vh',
-    backgroundColor: '#f0f0f0',
+    backgroundColor: "#fff0f8",
     padding: '0',
     margin: '0',
   },
@@ -171,7 +171,7 @@ const styles = {
   },
   leftSection: {
     flex: '30%',
-    backgroundColor: '#f9f9f9',
+    backgroundColor: '#f7d0e5',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -181,6 +181,7 @@ const styles = {
   rightSection: {
     flex: '70%',
     padding: '20px',
+    backgroundColor: '#fce1f0',
   },
   avatar: {
     display: 'flex',

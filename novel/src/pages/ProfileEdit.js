@@ -20,13 +20,13 @@ const ProfileEdit = () => {
       }
 
       try {
-        const userResponse = await api.get('/list/user', {
+        const userResponse = await api.get('/list/user/current', {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         });
 
-        const userData = userResponse.data[0];
+        const userData = userResponse.data;
         if (userData) {
           let description = '';
           try {
@@ -114,8 +114,10 @@ const ProfileEdit = () => {
 
   return (
     <div style={styles.page}>
-      <div style={styles.container}>
+      <div style={styles.titleContainer}>
         <h1 style={styles.title}>Editar Perfil</h1>
+        </div>
+        <div style={styles.formContainer}>
         {successMessage && <p style={styles.successText}>{successMessage}</p>}
         <form onSubmit={handleSubmit} style={styles.form}>
           <label style={styles.label}>Nome de Usuário:</label>
@@ -144,6 +146,7 @@ const ProfileEdit = () => {
             onChange={handleInputChange}
             style={styles.input}
           />
+          
 
           <label style={styles.label}>Descrição:</label>
           <textarea
@@ -170,23 +173,36 @@ const ProfileEdit = () => {
 const styles = {
   page: {
     display: 'flex',
+    flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
     minHeight: '100vh',
-    backgroundColor: '#f0f0f0',
+    backgroundColor: "#fff0f8",
+    paddingTop: '40px',
   },
-  container: {
+  titleContainer: { 
     width: '40%',
-    backgroundColor: '#fff',
-    padding: '20px',
-    borderRadius: '8px',
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-    textAlign: 'center',
+    height: '30px',
+    backgroundColor: '#f7d0e5', 
+    padding: '20px', 
+    borderRadius: '8px 8px 0 0', 
+    boxShadow: '0 0px 8px rgba(0, 0, 0, 0.2)', 
+    textAlign: 'center', 
+    marginTop: '-130px',
   },
+  formContainer: { 
+    width: '40%', 
+    backgroundColor: '#fce1f0', 
+    padding: '20px', 
+    borderRadius: '0 0 8px 8px',
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)', 
+    textAlign: 'center', 
+},
   title: {
     fontSize: '24px',
     fontWeight: 'bold',
     marginBottom: '20px',
+    marginTop: '4px',
   },
   label: {
     display: 'block',
@@ -195,7 +211,7 @@ const styles = {
     textAlign: 'left',
   },
   input: {
-    width: '100%',
+    width: '95%',
     padding: '10px',
     fontSize: '16px',
     marginBottom: '20px',
@@ -204,7 +220,7 @@ const styles = {
   },
   textarea: {
     width: '100%',
-    padding: '10px',
+    padding: '0px',
     fontSize: '16px',
     height: '100px',
     border: '1px solid #ddd',
