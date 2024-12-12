@@ -53,7 +53,6 @@ const ProjectPage = () => {
             <div style={styles.newProject} onClick={handleNewNovelClick}>
                 <div style={styles.plusIcon}>+</div>
             </div>
-            <p style={styles.newText}>NEW NOVEL</p> {/* Texto fora do bloco, abaixo */}
             {scenes.map((scene) => (
                 <ProjectBlock3 key={scene.id} id={scene.id} name={scene.name} imageUrl={scene.url_background} />
             ))}
@@ -102,14 +101,6 @@ const styles = {
         fontSize: '18px',
         color: '#333',
         fontWeight: 'bold',
-    },
-    newText: {
-        marginTop: "0.5px", // Ajuste para mover o texto para baixo do bloco
-        marginLeft: "22px", // Ajuste para mover o texto para a direita
-        color: "#000000", // Cor do texto "NEW NOVEL" com correspondência ao bloco
-        fontWeight: "bold",
-        textAlign: "left", // Alinha o texto à esquerda para o efeito de deslocamento para a direita
-        fontFamily: '"Poppins", sans-serif',
     },
     plusIcon: {
         fontSize: "100px", // Aumenta o tamanho do ícone
