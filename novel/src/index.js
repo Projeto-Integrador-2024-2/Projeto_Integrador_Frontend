@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './pages/App';
+import './pages/styles.css';
+
 
 
 // Definindo o estilo global para a fonte

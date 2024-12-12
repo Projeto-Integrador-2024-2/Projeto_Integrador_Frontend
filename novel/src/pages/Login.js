@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../api_access';
 import Cookies from 'js-cookie';
+import './styles.css'
 
 export default function Login() {
     const [username, setUsername] = useState('');
@@ -28,6 +29,23 @@ export default function Login() {
             }
         }
     };
+
+const globalStyles = {
+    html: {
+        margin: 0,
+        padding: 0,
+        boxSizing: 'border-box',
+    },
+    body: {
+        margin: 0,
+        padding: 0,
+        width: '100vw',
+        height: '100vh',
+    },
+    '*': {
+        boxSizing: 'inherit',
+    },
+};
 
     const styles = {
         container: {
@@ -70,18 +88,20 @@ export default function Login() {
         inputLabel: {
             display: 'block',
             fontWeight: 'bold',
-            marginBottom: '5px',
+            marginBottom: '10px',
             fontFamily: '"Poppins", sans-serif',
         },
         inputField: {
             width: '100%',
             padding: '10px',
-            borderRadius: '8px',
+            borderRadius: '6px',
             border: '1px solid #ddd',
             outline: 'none',
             boxShadow: 'inset 0px 2px 5px rgba(0, 0, 0, 0.1)',
             fontFamily: '"Poppins", sans-serif',
-        },
+            fontSize: '16px', // Adicione para uniformizar o tamanho da fonte
+            height: '30px',   // Adicione uma altura fixa para ambos os inputs
+        },        
         submitButton: {
             width: '100%',
             padding: '12px',
