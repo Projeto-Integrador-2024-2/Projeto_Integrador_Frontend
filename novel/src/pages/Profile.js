@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react'; 
 import { useNavigate } from 'react-router-dom';
 import Cookies from "js-cookie";
 import api from '../api_access';
@@ -10,6 +10,7 @@ const Profile = () => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isGalleryOpen, setIsGalleryOpen] = useState(false); // Estado para controlar se a galeria está aberta
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -91,6 +92,14 @@ const Profile = () => {
     navigate("/project/create");
   };
 
+  const toggleGallery = () => {
+    setIsGalleryOpen(!isGalleryOpen);
+  };
+
+  const closeGallery = () => {
+    setIsGalleryOpen(false);
+  };
+
   if (!profile) {
     return <p style={styles.loadingText}>Carregando informações do perfil...</p>;
   }
@@ -127,8 +136,29 @@ const Profile = () => {
               />
             ))}
           </div>
+          <button style={styles.viewMoreButton} onClick={toggleGallery}>
+            {isGalleryOpen ? "Fechar Galeria" : "Ver Mais"}
+          </button>
         </div>
       </div>
+
+      {isGalleryOpen && (
+        <div style={styles.galleryPopup}>
+          <div style={styles.galleryContainer}>
+            {/* Botão para fechar o popup dentro da galeria */}
+            <button style={styles.closeButton} onClick={closeGallery}>X</button>
+            {/* Exibição dos projetos dentro da galeria */}
+            {projects.map((project) => (
+              <ProjectBlock2
+                key={project.id}
+                id={project.id}
+                name={project.name}
+                imageUrl={project.first_scene.url_background}
+              />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -169,6 +199,7 @@ const styles = {
     flex: '70%',
     padding: '20px',
     backgroundColor: '#fce1f0',
+    position: 'relative',
   },
   avatar: {
     display: 'flex',
@@ -213,15 +244,61 @@ const styles = {
     fontWeight: 'bold',
   },
   projectsContainer: {
-    display: "flex",
-    justifyContent: "center",
-    flexWrap: "wrap",
+    display: "grid",
+    gridTemplateColumns: "repeat(3, 1fr)", // 3 colunas por linha
     gap: "16px",
     marginTop: "50px",
     marginLeft: "50px",
     width: "80%",
     padding: "10px 0",
-  }
+  },
+  viewMoreButton: {
+    position: 'absolute',
+    bottom: '20px',
+    right: '20px',
+    padding: '10px 20px',
+    backgroundColor: '#7e005f',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    fontSize: '16px',
+  },
+  galleryPopup: {
+    position: 'fixed',
+    top: '0',
+    left: '0',
+    right: '0',
+    bottom: '0',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)', // Cor do fundo do popup, altere para a cor desejada
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: '1000',
+  },
+  closeButton: {
+    position: 'absolute',
+    top: '10px',
+    right: '10px',
+    backgroundColor: 'transparent',
+    color: '#000000',
+    fontSize: '30px',
+    border: 'none',
+    cursor: 'pointer',
+    zIndex: '1010',
+  },
+  galleryContainer: {
+    display: "grid",
+    gridTemplateColumns: "repeat(3, 1fr)", // 3 colunas por linha
+    gap: "16px",
+    backgroundColor: "#fff",
+    padding: "20px",
+    borderRadius: "8px",
+    overflowY: "auto",
+    maxHeight: "80vh",
+    maxWidth: "90%",
+    position: 'relative', // Permite o posicionamento absoluto do X
+  },
 };
 
 export default Profile;
