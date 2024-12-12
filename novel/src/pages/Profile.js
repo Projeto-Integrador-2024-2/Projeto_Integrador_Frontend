@@ -4,7 +4,6 @@ import Cookies from "js-cookie";
 import api from '../api_access';
 import { ProjectBlock2 } from "./ProjectBlock";
 
-
 const Profile = () => {
   const [profile, setProfile] = useState(null); // Estado para armazenar dados do perfil
   const navigate = useNavigate();
@@ -13,28 +12,25 @@ const Profile = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Busca de dados do perfil a partir do backend
     const fetchProfile = async () => {
       const accessToken = Cookies.get("accessToken");
       if (!accessToken) {
         console.error("Token de acesso não encontrado");
         return;
       }
-      
+
       try {
-        // Busca o perfil associado ao token
         const userResponse = await api.get("/list/user/current", {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         });
-        
-        const profileData = userResponse.data; // Pegando o primeiro usuário
+
+        const profileData = userResponse.data;
 
         if (profileData) {
           let description = "Nenhuma descrição disponível.";
 
-          // Busca a descrição associada ao usuário
           try {
             const descriptionResponse = await api.get(`/list/description?user_id=${profileData.id}`, {
               headers: {
@@ -66,8 +62,7 @@ const Profile = () => {
             Authorization: `Bearer ${accessToken}`,
           },
         });
-        //console.log(response.data);
-        setProjects(response.data); 
+        setProjects(response.data);
       } catch (err) {
         console.error("Erro ao buscar projetos:", err.response?.data || err.message);
         setError("Não foi possível carregar os projetos.");
@@ -81,11 +76,11 @@ const Profile = () => {
   }, []);
 
   const handleEditProfile = () => {
-    navigate("/profile/edit"); // Redireciona para a página de edição de perfil
+    navigate("/profile/edit");
   };
 
   const handleNewProject = () => {
-    navigate("/project/create"); // Redireciona para a página de criação de projeto
+    navigate("/project/create");
   };
 
   if (!profile) {
@@ -100,37 +95,22 @@ const Profile = () => {
     return <p>{error}</p>;
   }
 
-  const settings = {
-    dots: true, // Exibe pontos de navegação
-    infinite: true, // Habilita o loop infinito
-    speed: 500, // Velocidade da transição
-    slidesToShow: 1, // Número de slides visíveis por vez
-    slidesToScroll: 1, // Número de slides a serem rolados por vez
-    autoplay: true, // Ativa o autoplay
-    autoplaySpeed: 2000, // Intervalo do autoplay (em milissegundos)
-    arrows: true, // Habilita setas de navegação
-  };
-
   return (
     <div style={styles.page}>
       <div style={styles.container}>
         <div style={styles.leftSection}>
           <div style={styles.avatar}>
-            {profile.name.charAt(0).toUpperCase()} {/* Exibe a inicial do nome */}
+            {profile.name.charAt(0).toUpperCase()}
           </div>
           <h1 style={styles.name}>{profile.name}</h1>
           <p style={styles.info}>{profile.description}</p>
-          <button style={styles.button} onClick={handleEditProfile}>
-            Editar Perfil
-          </button>
-          <button style={styles.button} onClick={handleNewProject}> {/* Redireciona para a criação de projeto */}
-            New Project
-          </button>
+          <button style={styles.button} onClick={handleEditProfile}>Editar Perfil</button>
+          <button style={styles.button} onClick={handleNewProject}>New Project</button>
         </div>
         <div style={styles.rightSection}>
           <div style={styles.projectsContainer}>
-            {/* Blocos de projetos */}
-            {projects.map((project) => (
+            {/* Exibindo no máximo 3 blocos de projetos */}
+            {projects.slice(0, 3).map((project) => (
               <ProjectBlock2
                 key={project.id}
                 id={project.id}
@@ -145,7 +125,6 @@ const Profile = () => {
   );
 };
 
-// Estilos para a página
 const styles = {
   page: {
     display: 'flex',
@@ -227,13 +206,13 @@ const styles = {
   },
   projectsContainer: {
     display: "flex",
-    justifyContent: "center",  // Alinha os itens horizontalmente no centro
-    flexWrap: "wrap",          // Permite que os itens que não cabem na linha sejam movidos para a próxima linha
-    gap: "16px",               // Espaço entre os itens
+    justifyContent: "center",
+    flexWrap: "wrap",
+    gap: "16px",
     marginTop: "50px",
     marginLeft: "50px",
-    width: "80%",              // Pode ajustar conforme necessário
-    padding: "10px 0",         // Ajuste de padding conforme necessário
+    width: "80%",
+    padding: "10px 0",
   }
 };
 

@@ -17,6 +17,10 @@ import Profile from "./Profile";
 import ProfileEdit from "./ProfileEdit";
 import ProjectCreate from "./ProjectCreate";
 
+import "slick-carousel/slick/slick.css"; 
+import "slick-carousel/slick/slick-theme.css";
+
+
 const globalStyles = {
   margin: 0,
   padding: 0,

@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './pages/App';
 
+
 // Definindo o estilo global para a fonte
 //const globalStyle = {
 //  fontFamily: 'Poppins, sans-serif', // Fonte Poppins
