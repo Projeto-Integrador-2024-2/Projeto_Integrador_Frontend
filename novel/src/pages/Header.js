@@ -30,14 +30,21 @@ const Header = () => {
     // Função para renderizar o conteúdo padrão do Header
     const renderContentForMainScreens = () => (
         <div style={{ ...styles.container, ...styles.mainContainer }}>
-            {/* Botão de voltar */}
+            {/* Container para a seta de navegação e o título */}
             {location.pathname !== '/login' && location.pathname !== '/register' && (
-                <IoArrowBack 
-                    style={styles.backButton} 
-                    onClick={() => navigate(-1)} // Navega para a página anterior
-                />
+                <div style={styles.navContainer}>
+                    <IoArrowBack 
+                        style={styles.backButton} 
+                        onClick={() => navigate(-1)} // Navega para a página anterior
+                    />
+                    <h1 
+                        style={{ ...styles.title, ...styles.mainTitle }} 
+                        onClick={() => window.location.href = '/'}
+                        >Your Novel
+        </h1>
+
+                </div>
             )}
-            <h1 style={{ ...styles.title, ...styles.mainTitle }}>Your Novel</h1>
             {/* Ícone de perfil */}
             <div style={styles.profileContainer}>
                 <FaUser 
@@ -93,6 +100,7 @@ const styles = {
         fontSize: '55px',
         fontWeight: 'bold',
         fontFamily: '"Chewy", sans-serif',
+        cursor: 'pointer', // Adiciona um cursor de ponteiro para indicar que é clicável
     },
     socialIcons: {
         display: 'flex',
@@ -134,7 +142,12 @@ const styles = {
         fontSize: '24px',
         color: '#fff',
         cursor: 'pointer',
-        marginRight: '-1100px', // Reduz a margem da seta para movê-la mais para a esquerda
+        marginRight: '10px', // Ajuste da posição da seta
+    },
+    navContainer: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
     },
     loginRegisterContainer: {
         backgroundColor: '#fff', 
@@ -148,6 +161,7 @@ const styles = {
     },
     mainTitle: {
         color: '#fff',
+        marginLeft: '10px', // Espaço entre a seta e o título
     },
 };
 
