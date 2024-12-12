@@ -108,11 +108,11 @@ const styles = {
     height: '100vh',
     // Ajuste conforme necessário 
   },
-  button: { padding: '10px 20px',
+  button: { padding: '20px 30px',
     fontSize: '16px',
     fontWeight: 'bold',
     color: '#fff',
-    background: 'linear-gradient(45deg, #6a11cb, #2575fc)',
+    background: 'linear-gradient(45deg,rgb(255, 0, 191),rgba(255, 113, 248, 0.68))',
     border: 'none',
     borderRadius: '25px',
     boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
