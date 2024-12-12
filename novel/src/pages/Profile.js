@@ -66,8 +66,16 @@ const Profile = () => {
             Authorization: `Bearer ${accessToken}`,
           },
         });
-        //console.log(response.data);
-        setProjects(response.data); 
+        const updatedProjects = response.data.map(project => {
+          if (project.first_scene === null) {
+            project.first_scene = {
+              url_background: "-"
+            };
+          }
+          return project;
+        });
+        //console.log(response.data)
+        setProjects(updatedProjects); 
       } catch (err) {
         console.error("Erro ao buscar projetos:", err.response?.data || err.message);
         setError("Não foi possível carregar os projetos.");
