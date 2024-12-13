@@ -204,7 +204,7 @@ const styles = {
     borderRadius: '8px 8px 0 0',
     boxShadow: '0 0px 8px rgba(0, 0, 0, 0.2)',
     textAlign: 'center',
-    marginTop: '-90px',
+    marginTop: '-80px',
   },
   formContainer: {
     width: '40%',
@@ -217,8 +217,8 @@ const styles = {
   title: {
     fontSize: '24px',
     fontWeight: 'bold',
-    marginBottom: '20px',
-    marginTop: '4px',
+    marginBottom: '10px',
+    marginTop: '-15px',
   },
   label: {
     display: 'block',

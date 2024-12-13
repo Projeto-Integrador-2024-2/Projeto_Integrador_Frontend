@@ -41,8 +41,7 @@ const Header = () => {
                         style={{ ...styles.title, ...styles.mainTitle }} 
                         onClick={() => window.location.href = '/'}
                         >Your Novel
-        </h1>
-
+                    </h1>
                 </div>
             )}
             {/* Ícone de perfil */}
@@ -62,7 +61,15 @@ const Header = () => {
                         >
                             Perfil
                         </div>
-                        <div style={styles.menuItem}>Settings</div>
+                        <div
+                            style={styles.menuItem}
+                            onClick={() => {
+                                setMenuOpen(false); // Fecha o menu
+                                navigate('/profile/edit'); // Redireciona para a tela de edição de perfil
+                            }}
+                        >
+                            Settings
+                        </div>
                         <div style={styles.menuItem} onClick={handleLogout}>Logout</div>
                     </div>
                 )}
