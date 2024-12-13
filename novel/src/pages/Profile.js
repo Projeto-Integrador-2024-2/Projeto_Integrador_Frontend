@@ -11,10 +11,10 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isGalleryOpen, setIsGalleryOpen] = useState(false); // Estado para controlar se a galeria está aberta
+  const accessToken = Cookies.get("accessToken");
 
   useEffect(() => {
     const fetchProfile = async () => {
-      const accessToken = Cookies.get("accessToken");
       if (!accessToken) {
         console.error("Token de acesso não encontrado");
         return;
@@ -88,8 +88,28 @@ const Profile = () => {
     navigate("/profile/edit");
   };
 
-  const handleNewProject = () => {
-    navigate("/project/create");
+  const handleNewProject = async () => {
+    const projectData = {
+      name: "Novo Projeto",
+      privacy: true, // Altere conforme os campos esperados pelo backend
+    };
+  
+    try {
+      const response = await api.post("/create/project", projectData, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        },
+      });
+  
+      console.log("Projeto criado com sucesso:", response.data);
+  
+      // Recarregar a página
+      window.location.reload(); // Isso vai recarregar a página inteira
+      
+    } catch (error) {
+      console.error("Erro ao criar projeto:", error.response?.data || error.message);
+      alert("Não foi possível criar o projeto.");
+    }
   };
 
   const toggleGallery = () => {
