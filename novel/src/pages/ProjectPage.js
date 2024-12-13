@@ -209,7 +209,7 @@ const ProjectPage = () => {
     };
 
     const handleEdit = (id) => {
-        navigate(`/scene/edit/${id}`);
+        navigate(`/scene/${id}`);
     };
 
     const closeMenu = () => {
