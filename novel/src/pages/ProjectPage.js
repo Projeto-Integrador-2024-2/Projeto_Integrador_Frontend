@@ -26,13 +26,12 @@ const ProjectPage = () => {
     useEffect(() => {
         const fetchScenes = async () => {
             try {
-
                 const projectResponse = await api.get(`/list/project/${projectId}`, {
                     headers: {
                         Authorization: `Bearer ${accessToken}`,
                     },
                 });
-                setProject(projectResponse.data); // Armazena o projeto no estado
+                setProject(projectResponse.data);
 
                 const response = await api.get(`/list/scene/${projectId}`, {
                     headers: {
@@ -59,6 +58,41 @@ const ProjectPage = () => {
 
         fetchScenes();
     }, [projectId]);
+
+    const handleNewScene = async () => {
+        const payload = {
+            name: "-",
+            url_background: "-",
+            url_text_box: "-",
+            url_character_left: "-",
+            url_character_middle: "-",
+            url_character_right: "-",
+            text: "-",
+            project: project[0].id, // Substitua pelo ID do projeto correspondente
+        };
+
+        if (!project[0]) {
+            alert("Erro ao criar nova cena");
+            return;
+        }
+
+        try {
+            const newSceneResponse = await api.post(`/create/scene`, payload, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            });
+
+            setScenes((prevScenes) => [...prevScenes, newSceneResponse.data]);
+            const newSceneId = newSceneResponse.data.id;
+            setPositions((prevPositions) => ({
+                ...prevPositions,
+                [newSceneId]: { x: 20, y: 20 },
+            }));
+        } catch (error) {
+            console.error("Erro ao criar a cena:", error.response?.data || error.message);
+        }
+    };
 
     const handleMouseDown = (id, event) => {
         if (tool === "move") {
@@ -92,6 +126,7 @@ const ProjectPage = () => {
                     prevConnections.map((connection) => ({
                         ...connection,
                         line: calculateLine(updatedPositions, connection.start, connection.end),
+                        arrow: calculateArrowPosition(updatedPositions, connection.start, connection.end),
                     }))
                 );
 
@@ -114,6 +149,7 @@ const ProjectPage = () => {
                     start: selectedScene,
                     end: id,
                     line: calculateLine(positions, selectedScene, id),
+                    arrow: calculateArrowPosition(positions, selectedScene, id),
                 };
                 setConnections((prev) => [...prev, newConnection]);
                 setSelectedScene(null);
@@ -135,51 +171,55 @@ const ProjectPage = () => {
         };
     };
 
+    const calculateArrowPosition = (positions, startId, endId) => {
+        const start = positions[startId];
+        const end = positions[endId];
+        if (!start || !end) return null;
+        return {
+            x: (start.x + end.x) / 2 + 75,
+            y: (start.y + end.y) / 2 + 75,
+        };
+    };
+
+    const handleDeleteScene = async (id) => {
+        try {
+            // Realizar a requisição DELETE para deletar a cena no backend
+            const response = await api.delete(`/delete/scene?id=${id}`, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            });
+    
+            // Se a exclusão no backend foi bem-sucedida, chama o handleDelete para atualizar o estado
+            handleDelete(id);
+    
+            // Fechar o menu após a exclusão
+            setMenuVisible(null);
+        } catch (error) {
+            console.error("Erro ao deletar cena:", error?.response?.data || error.message);
+            alert("Erro ao deletar a cena.");
+        }
+    };
+    
     const handleDelete = (id) => {
-        setScenes((prevScenes) => prevScenes.filter((scene) => scene.id !== id));
-        setMenuVisible(null);
+        setScenes((prevScenes) => prevScenes.filter((scene) => scene.id !== id)); // Remove a cena do estado
         setConnections((prevConnections) =>
-            prevConnections.filter((connection) => connection.start !== id && connection.end !== id)
+            prevConnections.filter((connection) => connection.start !== id && connection.end !== id) // Remove conexões associadas à cena
         );
     };
 
     const handleEdit = (id) => {
-        navigate(`/scene/${id}/edit`);
+        navigate(`/scene/edit/${id}`);
     };
 
     const closeMenu = () => {
         setMenuVisible(null);
     };
 
-    const handleNewScene = async () => {
-        const payload = {
-            name : "-",
-            url_background: "-",
-            url_text_box: "-",
-            url_character_left: "-",
-            url_character_middle: "-",
-            url_character_right: "-",
-            text: "-",
-            project: project[0].id, // Substitua pelo ID do projeto correspondente
-        };
-        
-        if(!project[0]){
-            alert("Erro ao criar nova cena")
-            return;
-        }
-        
-            try {
-            const newSceneResponse = await api.post(`/create/scene`, payload, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                },
-            });
-    
-            console.log(projectId);
-            setScenes(prevScenes => [...prevScenes, newSceneResponse.data]);
-        } catch (error) {
-            console.error("Erro ao criar a cena:", error.response?.data || error.message);
-        }
+    const calculateAngle = (start, end) => {
+        const dx = end.x - start.x;
+        const dy = end.y - start.y;
+        return Math.atan2(dy, dx);
     };
 
     if (loading) return <p>Carregando projetos...</p>;
@@ -205,29 +245,57 @@ const ProjectPage = () => {
                 >
                     Conectar
                 </div>
-                <div style={styles.newProject} onClick={() => handleNewScene() }>+</div>
+                <div style={styles.newProject} onClick={() => handleNewScene()}>+</div>
             </div>
             <div style={{ ...styles.screen, width: `${screenBounds.width}px`, height: `${screenBounds.height}px` }}>
                 <svg style={styles.lineContainer}>
                     <defs>
-                        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
                             <polygon points="0 0, 10 3.5, 0 7" fill="black" />
                         </marker>
-                        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                            <stop offset="0%" style={{ stopColor: "#eda1d5", stopOpacity: 1 }} />
-                            <stop offset="100%" style={{ stopColor: "#7e005f", stopOpacity: 1 }} />
-                        </linearGradient>
                     </defs>
-                    {connections.map((connection, index) => (
-                        <line
-                            key={index}
-                            x1={connection.line.x1}
-                            y1={connection.line.y1}
-                            x2={connection.line.x2}
-                            y2={connection.line.y2}
-                            style={{ ...styles.line, stroke: "url(#gradient)" }}
-                        />
-                    ))}
+                    {connections.map((connection, index) => {
+                    const gradientId = `gradient-${index}`;
+                    const start = positions[connection.start];
+                    const end = positions[connection.end];
+
+                    // Calcular a linha e a posição do triângulo
+                    const line = calculateLine(positions, connection.start, connection.end);
+                    const arrowX = (line.x1 + line.x2) / 2;
+                    const arrowY = (line.y1 + line.y2) / 2;
+
+                    // Calcular o ângulo da linha
+                    const angle = Math.atan2(line.y2 - line.y1, line.x2 - line.x1);
+
+                    // Tamanho do triângulo (ajuste conforme necessário)
+                    const triangleSize = 10;
+
+                    return (
+                        <>
+                            <defs key={`defs-${index}`}>
+                                <linearGradient id={gradientId} x1={line.x1} y1={line.y1} x2={line.x2} y2={line.y2} gradientUnits="userSpaceOnUse">
+                                    <stop offset="0%" style={{ stopColor: "#eda1d5", stopOpacity: 1 }} />
+                                    <stop offset="100%" style={{ stopColor: "#7e005f", stopOpacity: 1 }} />
+                                </linearGradient>
+                            </defs>
+                            <line
+                                key={`line-${index}`}
+                                x1={line.x1}
+                                y1={line.y1}
+                                x2={line.x2}
+                                y2={line.y2}
+                                style={{ ...styles.line, stroke: `url(#${gradientId})` }}
+                            />
+                            {/* Triângulo (seta) */}
+                            <polygon
+                                key={`arrow-${index}`}
+                                points={`${arrowX - triangleSize},${arrowY - triangleSize / 2} ${arrowX + triangleSize},${arrowY} ${arrowX - triangleSize},${arrowY + triangleSize / 2}`}
+                                fill="purple"
+                                transform={`rotate(${angle * (180 / Math.PI)}, ${arrowX}, ${arrowY})`}
+                            />
+                        </>
+                    );
+                })}
                 </svg>
                 {scenes.map((scene) => (
                     <div
@@ -236,6 +304,7 @@ const ProjectPage = () => {
                             ...styles.draggable,
                             left: `${positions[scene.id]?.x || 0}px`,
                             top: `${positions[scene.id]?.y || 0}px`,
+                            border: selectedScene === scene.id ? "2px solid pink" : "none",
                         }}
                         onMouseDown={(e) => handleMouseDown(scene.id, e)}
                         onClick={(e) => handleSceneClick(scene.id, e)}
@@ -248,7 +317,7 @@ const ProjectPage = () => {
                         {menuVisible === scene.id && tool === "move" && (
                             <div style={styles.menu} onClick={(e) => e.stopPropagation()}>
                                 <button onClick={() => handleEdit(scene.id)}>Editar</button>
-                                <button onClick={() => handleDelete(scene.id)}>Deletar</button>
+                                <button onClick={() => handleDeleteScene(scene.id)}>Deletar</button> {/* Passar o id aqui */}
                             </div>
                         )}
                     </div>
