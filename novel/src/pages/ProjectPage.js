@@ -17,14 +17,23 @@ const ProjectPage = () => {
     const [tool, setTool] = useState("move"); // "move" ou "connect"
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [project, setProject] = useState(null); // Para armazenar os detalhes do projeto
     const navigate = useNavigate();
 
     const screenBounds = { width: window.innerWidth * 0.8, height: window.innerHeight * 0.8 };
+    const accessToken = Cookies.get("accessToken");
 
     useEffect(() => {
         const fetchScenes = async () => {
-            const accessToken = Cookies.get("accessToken");
             try {
+
+                const projectResponse = await api.get(`/list/project/${projectId}`, {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                    },
+                });
+                setProject(projectResponse.data); // Armazena o projeto no estado
+
                 const response = await api.get(`/list/scene/${projectId}`, {
                     headers: {
                         Authorization: `Bearer ${accessToken}`,
@@ -142,6 +151,37 @@ const ProjectPage = () => {
         setMenuVisible(null);
     };
 
+    const handleNewScene = async () => {
+        const payload = {
+            name : "-",
+            url_background: "-",
+            url_text_box: "-",
+            url_character_left: "-",
+            url_character_middle: "-",
+            url_character_right: "-",
+            text: "-",
+            project: project[0].id, // Substitua pelo ID do projeto correspondente
+        };
+        
+        if(!project[0]){
+            alert("Erro ao criar nova cena")
+            return;
+        }
+        
+            try {
+            const newSceneResponse = await api.post(`/create/scene`, payload, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            });
+    
+            console.log(projectId);
+            setScenes(prevScenes => [...prevScenes, newSceneResponse.data]);
+        } catch (error) {
+            console.error("Erro ao criar a cena:", error.response?.data || error.message);
+        }
+    };
+
     if (loading) return <p>Carregando projetos...</p>;
     if (error) return <p>{error}</p>;
 
@@ -165,7 +205,7 @@ const ProjectPage = () => {
                 >
                     Conectar
                 </div>
-                <div style={styles.newProject} onClick={() => navigate("/scene/create")}>+</div>
+                <div style={styles.newProject} onClick={() => handleNewScene() }>+</div>
             </div>
             <div style={{ ...styles.screen, width: `${screenBounds.width}px`, height: `${screenBounds.height}px` }}>
                 <svg style={styles.lineContainer}>
