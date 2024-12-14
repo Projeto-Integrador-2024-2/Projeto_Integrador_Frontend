@@ -18,6 +18,12 @@ const ProjectPage = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [project, setProject] = useState(null); // Para armazenar os detalhes do projeto
+    const [selectedConnection, setSelectedConnection] = useState(null);
+    const [newConnectionName, setNewConnectionName] = useState(""); // Nome da conexão ao criar
+    const [showNameInput, setShowNameInput] = useState(false); // Exibir input de texto
+    const [pendingConnection, setPendingConnection] = useState(null);
+    const [editingConnection, setEditingConnection] = useState(null); // Para controlar a conexão sendo editada
+    const [editedConnectionName, setEditedConnectionName] = useState(""); // Para armazenar o nome editado
     const navigate = useNavigate();
 
     const screenBounds = { width: window.innerWidth * 0.8, height: window.innerHeight * 0.8 };
@@ -32,22 +38,26 @@ const ProjectPage = () => {
                     },
                 });
                 setProject(projectResponse.data);
-
+    
                 const response = await api.get(`/list/scene/${projectId}`, {
                     headers: {
                         Authorization: `Bearer ${accessToken}`,
                     },
                 });
-
+    
+                // Armazenar cenas e suas posições inicializadas, mas sem sobrescrever as posições
+                if (response.data.length > 0 && Object.keys(positions).length === 0) {
+                    const initialPositions = {};
+                    response.data.forEach((scene, index) => {
+                        initialPositions[scene.id] = {
+                            x: 20 + (index % 4) * 180,
+                            y: 20 + Math.floor(index / 4) * 180,
+                        };
+                    });
+                    setPositions(initialPositions);
+                }
+    
                 setScenes(response.data);
-                const initialPositions = {};
-                response.data.forEach((scene, index) => {
-                    initialPositions[scene.id] = {
-                        x: 20 + (index % 4) * 180,
-                        y: 20 + Math.floor(index / 4) * 180,
-                    };
-                });
-                setPositions(initialPositions);
             } catch (err) {
                 console.error("Erro ao buscar projetos:", err?.response?.data || err.message);
                 setError("Não foi possível carregar os projetos.");
@@ -55,9 +65,22 @@ const ProjectPage = () => {
                 setLoading(false);
             }
         };
-
         fetchScenes();
-    }, [projectId]);
+    
+        const handleClickOutside = (e) => {
+            // Verifique se o clique foi fora da linha ou do botão de deletar
+            if (!e.target.closest('line') && !e.target.closest('.delete-button') && selectedConnection !== null) {
+                setSelectedConnection(null); // Desmarca a linha
+            }
+        };
+    
+        // Adiciona o evento de clique fora da linha
+        document.addEventListener('click', handleClickOutside);
+    
+        return () => {
+            document.removeEventListener('click', handleClickOutside);
+        };
+    }, [projectId, selectedConnection, positions]);
 
     const handleNewScene = async () => {
         const payload = {
@@ -145,13 +168,7 @@ const ProjectPage = () => {
             if (selectedScene === null) {
                 setSelectedScene(id);
             } else if (selectedScene !== id) {
-                const newConnection = {
-                    start: selectedScene,
-                    end: id,
-                    line: calculateLine(positions, selectedScene, id),
-                    arrow: calculateArrowPosition(positions, selectedScene, id),
-                };
-                setConnections((prev) => [...prev, newConnection]);
+                handleCreateConnection(selectedScene, id);
                 setSelectedScene(null);
             }
         } else if (tool === "move" && !dragging) {
@@ -222,6 +239,70 @@ const ProjectPage = () => {
         return Math.atan2(dy, dx);
     };
 
+    const handleDeleteConnection = () => {
+        if (!selectedConnection) {
+            alert("Nenhuma conexão selecionada para deletar.");
+            return;
+        }
+
+        setConnections((prevConnections) =>
+            prevConnections.filter((connection) => connection !== selectedConnection)
+        );
+        setSelectedConnection(null); // Limpa a seleção após a exclusão
+    };
+
+    const handleCreateConnection = (fromScene, toScene) => {
+        console.log(`Creating connection from ${fromScene} to ${toScene}`);
+        setShowNameInput(true);
+        setNewConnectionName("");
+        setPendingConnection({ start: fromScene, end: toScene });
+    };
+    
+    const confirmConnectionCreation = () => {
+        if (!newConnectionName.trim()) {
+            alert("O nome da conexão é obrigatório!");
+            setShowNameInput(false);
+            setPendingConnection(null);
+            return;
+        }
+    
+        handleCreateConnection(pendingConnection.start, pendingConnection.end); // Use the function here
+        setConnections((prevConnections) => [
+            ...prevConnections,
+            { ...pendingConnection, name: newConnectionName.trim() },
+        ]);
+        setShowNameInput(false);
+        setPendingConnection(null);
+    };
+
+    const handleEditConnectionName = (connection) => {
+        setEditingConnection(connection); // Defina a conexão a ser editada
+        setEditedConnectionName(connection.name); // Preenche o input com o nome atual
+    };
+
+    const handleConfirmEditConnection = () => {
+        if (!editedConnectionName.trim()) {
+            alert("O nome da conexão não pode estar vazio!");
+            return;
+        }
+    
+        setConnections((prevConnections) =>
+            prevConnections.map((connection) =>
+                connection === editingConnection
+                    ? { ...connection, name: editedConnectionName.trim() }
+                    : connection
+            )
+        );
+    
+        setEditingConnection(null); // Fecha a edição
+        setEditedConnectionName(""); // Limpa o input
+    };
+    
+    const handleCancelEditConnection = () => {
+        setEditingConnection(null); // Fecha a edição sem salvar
+        setEditedConnectionName(""); // Limpa o input
+    };    
+
     if (loading) return <p>Carregando projetos...</p>;
     if (error) return <p>{error}</p>;
 
@@ -245,22 +326,35 @@ const ProjectPage = () => {
                 >
                     Conectar
                 </div>
+                <div
+                    style={tool === "selectConnection" ? styles.selectedTool : styles.tool}
+                    onClick={() => setTool("selectConnection")}
+                >
+                    Selecionar Conexão
+                </div>
                 <div style={styles.newProject} onClick={() => handleNewScene()}>+</div>
             </div>
             <div style={{ ...styles.screen, width: `${screenBounds.width}px`, height: `${screenBounds.height}px` }}>
                 <svg style={styles.lineContainer}>
-                    <defs>
-                        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
-                            <polygon points="0 0, 10 3.5, 0 7" fill="black" />
-                        </marker>
-                    </defs>
-                    {connections.map((connection, index) => {
+                <defs>
+                    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="black" />
+                    </marker>
+                </defs>
+                {connections.map((connection, index) => {
                     const gradientId = `gradient-${index}`;
                     const start = positions[connection.start];
                     const end = positions[connection.end];
 
                     // Calcular a linha e a posição do triângulo
                     const line = calculateLine(positions, connection.start, connection.end);
+
+                    // Verifique se 'line' contém as propriedades necessárias antes de usá-las
+                    if (!line || typeof line.x1 === 'undefined' || typeof line.y1 === 'undefined' || typeof line.x2 === 'undefined' || typeof line.y2 === 'undefined') {
+                        console.error("Invalid line data for connection:", connection);
+                        return null; // Retorna null se o dado da linha não for válido
+                    }
+
                     const arrowX = (line.x1 + line.x2) / 2;
                     const arrowY = (line.y1 + line.y2) / 2;
 
@@ -284,7 +378,17 @@ const ProjectPage = () => {
                                 y1={line.y1}
                                 x2={line.x2}
                                 y2={line.y2}
-                                style={{ ...styles.line, stroke: `url(#${gradientId})` }}
+                                style={{
+                                    ...styles.line,
+                                    stroke: selectedConnection === connection ? "red" : `url(#${gradientId})`,
+                                    cursor: tool === "selectConnection" ? "pointer" : "default",
+                                }}
+                                onClick={(e) => {
+                                    if (tool === "selectConnection") {
+                                        e.stopPropagation();
+                                        setSelectedConnection(connection);
+                                    }
+                                }}
                             />
                             {/* Triângulo (seta) */}
                             <polygon
@@ -293,6 +397,45 @@ const ProjectPage = () => {
                                 fill="purple"
                                 transform={`rotate(${angle * (180 / Math.PI)}, ${arrowX}, ${arrowY})`}
                             />
+                            {selectedConnection === connection && (
+                                <text
+                                    x={(line.x1 + line.x2) / 2 - 2}
+                                    y={(line.y1 + line.y2) / 2 - 20}
+                                    style={styles.connectionName}
+                                    onClick={() => handleEditConnectionName(connection)} // Adicionar evento de clique para editar
+                                >
+                                    {connection.name}
+                                </text>
+                            )}
+                            {selectedConnection === connection && (
+                                <foreignObject
+                                    x={(line.x1 + line.x2) / 2 - 40} 
+                                    y={(line.y1 + line.y2) / 2 + 10}
+                                    width="100"
+                                    height="40"
+                                >
+                                    <button onClick={handleDeleteConnection} style={styles.cancelButton}>Deletar</button>
+                                </foreignObject>
+                            )}
+                            {editingConnection === connection && (
+                                <foreignObject
+                                    x={(line.x1 + line.x2) / 2 - 500} 
+                                    y={(line.y1 + line.y2) / 2 - 150}
+                                    width="1000"
+                                    height="400"
+                                >
+                                    <div style={styles.inputContainer}>
+                                        <input
+                                            type="text"
+                                            value={editedConnectionName}
+                                            onChange={(e) => setEditedConnectionName(e.target.value)}
+                                            style={styles.input}
+                                        />
+                                        <button onClick={handleConfirmEditConnection} style={styles.confirmButton}>Confirmar</button>
+                                        <button onClick={handleCancelEditConnection} style={styles.cancelButton}>Cancelar</button>
+                                    </div>
+                                </foreignObject>
+                            )}
                         </>
                     );
                 })}
@@ -322,6 +465,29 @@ const ProjectPage = () => {
                         )}
                     </div>
                 ))}
+                {showNameInput && (
+                    <div style={styles.inputContainer}>
+                        <input
+                            type="text"
+                            value={newConnectionName}
+                            onChange={(e) => setNewConnectionName(e.target.value)}
+                            placeholder="Digite o nome da conexão"
+                            style={styles.input}
+                        />
+                        <button onClick={confirmConnectionCreation} style={styles.confirmButton}>
+                            Confirmar
+                        </button>
+                        <button
+                            onClick={() => {
+                                setShowNameInput(false);
+                                setPendingConnection(null);
+                            }}
+                            style={styles.cancelButton}
+                        >
+                            Cancelar
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );
@@ -406,6 +572,78 @@ const styles = {
     line: {
         strokeWidth: 2,
         markerEnd: "url(#arrowhead)",
+    },
+    deleteButton: {
+        padding: "10px",
+        backgroundColor: "#ff5c5c",
+        borderRadius: "4px",
+        cursor: "pointer",
+        color: "#fff",
+        textAlign: "center",
+        marginTop: "10px",
+    },    
+    inputContainer: {
+        display: "flex",
+        flexDirection: "column",
+        gap: "10px",
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        backgroundColor: "#fff",
+        padding: "20px",
+        border: "1px solid #ccc",
+        borderRadius: "8px",
+        boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+    },
+    input: {
+        padding: "10px",
+        border: "1px solid #ccc",
+        borderRadius: "4px",
+        fontSize: "16px",
+    },
+    confirmButton: {
+        backgroundColor: "#4CAF50",
+        color: "#fff",
+        border: "none",
+        padding: "10px 20px",
+        borderRadius: "4px",
+        cursor: "pointer",
+    },
+    cancelButton: {
+        backgroundColor: "#f44336",
+        color: "#fff",
+        border: "none",
+        padding: "10px 20px",
+        borderRadius: "4px",
+        cursor: "pointer",
+    },
+    connectionName: {
+        fill: "#000",
+        fontSize: "14px",
+        textAnchor: "middle",
+        dominantBaseline: "middle",
+    },
+    confirmDeleteButton: {
+        padding: "10px",
+        backgroundColor: "#ff5c5c",
+        borderRadius: "4px",
+        cursor: "pointer",
+        color: "#fff",
+        textAlign: "center",
+        marginTop: "10px",
+    },
+    connectionDelete: {
+        fill: 'red', // Cor do texto
+        backgroundColor: 'red', // Cor do fundo do "botão"
+        padding: '5px 10px', // Espaçamento interno para parecer um botão
+        borderRadius: '5px', // Bordas arredondadas
+        fontWeight: 'bold', // Texto em negrito
+        fontSize: '14px', // Tamanho da fonte
+        cursor: 'pointer', // Cursor de ponteiro ao passar o mouse
+        userSelect: 'none', // Impede que o texto seja selecionado
+        textAnchor: 'middle', // Centraliza o texto no botão
+        dominantBaseline: 'middle', // Centraliza verticalmente
     },
 };
 
