@@ -1,15 +1,40 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import api from "../api_access";
 
-// acha os projeto publico de td mundo e leva pra ver
-const ProjectBlock = ({ id, name, imageUrl }) => {
-  //console.log(imageUrl)
+// acha os projetos públicos de todo mundo e leva para visualização
+const ProjectBlock = ({ id, name, imageUrl, isPrivate, isStaff, accessToken }) => {
+
+  const blockStyle = {
+    ...styles.block,
+    backgroundColor: isPrivate ? "#ffe6e6" : "#f0f0f0", // Cor diferente para projetos privados
+  };
+
+  const handleDelete = async () => {
+    if (window.confirm("Tem certeza de que deseja excluir este projeto?")) {
+      try {
+        await api.delete(`delete/project?id=${id}`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }); // Substitua pela rota correta de exclusão
+        alert("Projeto excluído com sucesso!");
+        window.location.reload(); // Recarrega a página para atualizar a lista de projetos
+      } catch (error) {
+        console.error("Erro ao excluir o projeto:", error);
+        alert("Ocorreu um erro ao tentar excluir o projeto.");
+      }
+    }
+  };
+
   return (
-    <div 
-      style={styles.block} 
-      onClick={() => window.location.href = `/project/view/${id}`}
-    >
+    <div style={blockStyle}>
       <img src={imageUrl} alt={name} style={styles.image} />
       <h2 style={styles.name}>{name}</h2>
+      {isStaff && ( // Exibe o botão de exclusão apenas para usuários com cargo de staff
+        <button style={styles.deleteButton} onClick={handleDelete}>
+          Excluir
+        </button>
+      )}
     </div>
   );
 };

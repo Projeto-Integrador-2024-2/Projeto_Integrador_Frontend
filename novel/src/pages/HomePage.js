@@ -10,11 +10,12 @@ const HomePage = () => {
   const [error, setError] = useState(null);
   const [genres, setGenres] = useState([]); // Estado para os gêneros disponíveis
   const [selectedGenres, setSelectedGenres] = useState([]); // Estado para os gêneros selecionados
-  const navigate = useNavigate();
+  const [isStaff, setIsStaff] = useState(false); // Estado para verificar se o usuário é staff
+  const accessToken = Cookies.get("accessToken");
+  //const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProjects = async () => {
-      const accessToken = Cookies.get("accessToken");
       try {
         const response = await api.get("list/project/public/", {
           headers: {
@@ -39,7 +40,6 @@ const HomePage = () => {
     };
 
     const fetchGenres = async () => {
-      const accessToken = Cookies.get("accessToken");
       try {
         const response = await api.get("list/genre", {
           headers: {
@@ -53,6 +53,22 @@ const HomePage = () => {
       }
     };
 
+    const fetchUserInfo = async () => {
+      try {
+        const response = await api.get("/list/user/current", {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }); // Requisição para a API
+        const userInfo = response.data;
+        setIsStaff(userInfo.is_staff); // Atualiza o estado com a propriedade `is_staff`
+      } catch (error) {
+        console.error("Erro ao verificar informações do usuário:", error);
+        setIsStaff(false); // Garante que `isStaff` seja falso em caso de erro
+      }
+    };
+
+    fetchUserInfo();
     fetchProjects();
     fetchGenres();
   }, []);
@@ -120,6 +136,9 @@ const HomePage = () => {
                   id={project.id}
                   name={project.name}
                   imageUrl={project.first_scene.url_background}
+                  isPrivate={project.privacy}
+                  isStaff={isStaff}
+                  accessToken={accessToken}
                 />
               ))
             ) : (
