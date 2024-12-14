@@ -27,7 +27,10 @@ const ProjectBlock = ({ id, name, imageUrl, isPrivate, isStaff, accessToken }) =
   };
 
   return (
-    <div style={blockStyle}>
+    <div 
+      style={blockStyle}
+      onClick={() => window.location.href = `/project/view/${id}`}
+    >
       <img src={imageUrl} alt={name} style={styles.image} />
       <h2 style={styles.name}>{name}</h2>
       {isStaff && ( // Exibe o botão de exclusão apenas para usuários com cargo de staff
@@ -36,7 +39,7 @@ const ProjectBlock = ({ id, name, imageUrl, isPrivate, isStaff, accessToken }) =
         </button>
       )}
     </div>
-  );
+  );  
 };
 
 // acha os teus projetos e leva pra editar
