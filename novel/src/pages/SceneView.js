@@ -73,6 +73,7 @@ const TextBoxContainer = ({ urlTextBox, text }) => (
         alt="Text Box"
         style={styles.textBox}
         onError={(e) => (e.target.style.display = "none")} // Oculta a imagem caso falhe ao carregar
+        onLoad={(e) => (e.target.style.display = "flex")}
       />
     )}
     {text && <p style={styles.text}>{text}</p>}
