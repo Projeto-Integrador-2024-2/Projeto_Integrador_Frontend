@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import api from "../api_access";
 
+const defaultImageUrl = "/images/No_Image_Available.jpg"; // Caminho da imagem padrão
+
 // acha os projetos públicos de todo mundo e leva para visualização
 const ProjectBlock = ({ id, name, imageUrl, isPrivate, isStaff, accessToken }) => {
-
   const blockStyle = {
     ...styles.block,
     backgroundColor: isPrivate ? "#ffe6e6" : "#f0f0f0", // Cor diferente para projetos privados
@@ -16,7 +17,7 @@ const ProjectBlock = ({ id, name, imageUrl, isPrivate, isStaff, accessToken }) =
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
-        }); // Substitua pela rota correta de exclusão
+        });
         alert("Projeto excluído com sucesso!");
         window.location.reload(); // Recarrega a página para atualizar a lista de projetos
       } catch (error) {
@@ -31,13 +32,18 @@ const ProjectBlock = ({ id, name, imageUrl, isPrivate, isStaff, accessToken }) =
       style={blockStyle}
       onClick={() => window.location.href = `/project/view/${id}`}
     >
-      <img src={imageUrl} alt={name} style={styles.image} />
+      <img
+        src={imageUrl}
+        alt={name}
+        style={styles.image}
+        onError={(e) => { e.target.src = defaultImageUrl; }} // Define imagem padrão em caso de erro
+      />
       <h2 style={styles.name}>{name}</h2>
-      {isStaff && ( // Exibe o botão de exclusão apenas para usuários com cargo de staff
+      {isStaff && (
         <button
           style={styles.deleteButton}
           onClick={(e) => {
-            e.stopPropagation(); // Impede que o clique no botão dispare o evento da div
+            e.stopPropagation();
             handleDelete();
           }}
         >
@@ -45,29 +51,35 @@ const ProjectBlock = ({ id, name, imageUrl, isPrivate, isStaff, accessToken }) =
         </button>
       )}
     </div>
-
   );
 };
 
-// acha os teus projetos e leva pra editar
 const ProjectBlock2 = ({ id, name, imageUrl }) => {
-  //console.log(imageUrl)
   return (
     <div
       style={styles.block}
       onClick={() => window.location.href = `/project/${id}`}
     >
-      <img src={imageUrl} alt={name} style={styles.image} />
+      <img
+        src={imageUrl}
+        alt={name}
+        style={styles.image}
+        onError={(e) => { e.target.src = defaultImageUrl; }} // Define imagem padrão em caso de erro
+      />
       <h2 style={styles.name}>{name}</h2>
     </div>
   );
 };
 
-// mostra as cenas do projeto e leva pra editar elas
 const ProjectBlock3 = ({ id, name, imageUrl }) => {
   return (
     <div style={styles.block}>
-      <img src={imageUrl} alt={name} style={styles.image} />
+      <img
+        src={imageUrl}
+        alt={name}
+        style={styles.image}
+        onError={(e) => { e.target.src = defaultImageUrl; }} // Define imagem padrão em caso de erro
+      />
       <h2 style={styles.name}>{name}</h2>
     </div>
   );
