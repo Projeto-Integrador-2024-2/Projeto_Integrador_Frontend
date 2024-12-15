@@ -264,6 +264,27 @@ const ProjectPage = () => {
         navigate(`/scene/${id}`);
     };
 
+    const handleDefineFirstScene = async (sceneId) => {
+        try {
+            const response = await api.put(`/update/project?id=${projectId}`, {
+                first_scene: sceneId, // Dados para atualizar a primeira cena
+            }, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`, // Adiciona o token de autenticação
+                },
+            });
+    
+            if (response.status === 200) {
+                alert("Primeira cena difinida com sucessso!")
+            } else {
+                alert("Houve um problema ao atualizar a primeira cena.");
+            }
+            //TODO: não permitir o request caso a cena já seja primeira cena
+        } catch (error) {
+            console.error("Erro ao atualizar a primeira cena:", error.response?.data || error.message);
+        }
+    };
+
     const closeMenu = () => {
         setMenuVisible(null);
     };
@@ -584,8 +605,9 @@ const ProjectPage = () => {
                         />
                         {menuVisible === scene.id && tool === "move" && (
                             <div style={styles.menu} onClick={(e) => e.stopPropagation()}>
+                                <button onClick={() => handleDefineFirstScene(scene.id)}>Definir Primeira Cena</button>
                                 <button onClick={() => handleEdit(scene.id)}>Editar</button>
-                                <button onClick={() => handleDeleteScene(scene.id)}>Deletar</button> {/* Passar o id aqui */}
+                                <button onClick={() => handleDeleteScene(scene)}>Deletar</button> {/* Passar o id aqui */}
                             </div>
                         )}
                     </div>
@@ -614,6 +636,7 @@ const ProjectPage = () => {
                     </div>
                 )}
             </div>
+                
         </div>
     );
 };
