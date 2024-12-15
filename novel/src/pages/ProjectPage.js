@@ -8,6 +8,7 @@ import { useParams } from "react-router-dom";
 const ProjectPage = () => {
     const { projectId } = useParams();
     const [scenes, setScenes] = useState([]);
+    const [choices, setChoices] = useState([]);
     const [positions, setPositions] = useState({});
     const [menuVisible, setMenuVisible] = useState(null);
     const [dragging, setDragging] = useState(null);
@@ -28,6 +29,35 @@ const ProjectPage = () => {
 
     const screenBounds = { width: window.innerWidth * 0.8, height: window.innerHeight * 0.8 };
     const accessToken = Cookies.get("accessToken");
+
+    const loadChoicesAndConnections = async () => {
+        try {
+            const response = await api.get("/list/choice", {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`, // Certifique-se de usar o token correto
+                },
+            });
+
+            if (response.status === 200) {
+                const fetchedChoices = response.data;
+                setChoices(fetchedChoices); // Atualiza o estado das choices
+
+                // Cria conexões a partir das choices carregadas
+                const generatedConnections = fetchedChoices.map((choice) => ({
+                    id: choice.id,
+                    name: choice.text, // Usa o texto da choice como nome da conexão
+                    start: choice.from_scene,
+                    end: choice.to_scene,
+                    choiceId: choice.id, // Relaciona a conexão com a choice
+                }));
+
+                setConnections(generatedConnections); // Atualiza o estado das conexões
+                console.log("Choices e conexões carregadas com sucesso!");
+            }
+        } catch (error) {
+            console.error("Erro ao carregar choices:", error.response?.data || error.message);
+        }
+    };
 
     useEffect(() => {
         const fetchScenes = async () => {
@@ -65,8 +95,11 @@ const ProjectPage = () => {
                 setLoading(false);
             }
         };
+
+        // Dar um jeito de n ficar pedindo td vez q mexe um quadrado nesta merda, coitado dos get do backend
         fetchScenes();
-    
+        loadChoicesAndConnections();
+        
         const handleClickOutside = (e) => {
             // Verifique se o clique foi fora da linha ou do botão de deletar
             if (!e.target.closest('line') && !e.target.closest('.delete-button') && selectedConnection !== null) {
@@ -179,6 +212,7 @@ const ProjectPage = () => {
     const calculateLine = (positions, startId, endId) => {
         const start = positions[startId];
         const end = positions[endId];
+
         if (!start || !end) return null;
         return {
             x1: start.x + 75,
@@ -232,23 +266,74 @@ const ProjectPage = () => {
     const closeMenu = () => {
         setMenuVisible(null);
     };
-
-    const calculateAngle = (start, end) => {
-        const dx = end.x - start.x;
-        const dy = end.y - start.y;
-        return Math.atan2(dy, dx);
-    };
-
-    const handleDeleteConnection = () => {
-        if (!selectedConnection) {
-            alert("Nenhuma conexão selecionada para deletar.");
+    
+    const handleDeleteChoice = async (selectedChoice) => {
+        if (!selectedChoice) {
+            console.error('Nenhuma escolha selecionada.');
             return;
         }
+    
+        try {
+            const response = await api.delete(`/delete/choice?id=${selectedChoice}`);
+            if (response.status === 204) {
+                console.log('Escolha deletada com sucesso!');
+                setChoices((prevChoices) =>
+                    prevChoices.filter((choice) => choice.id !== selectedChoice)
+                );
+            }
+        } catch (error) {
+            console.error('Erro ao deletar escolha:', error.response?.data || error.message);
+        }
+    };
+    
+    const handleDeleteConnection = async () => {
+        if (!selectedConnection) {
+            alert('Nenhuma conexão selecionada para deletar.');
+            return;
+        }
+    
+        const { choiceId } = selectedConnection; // Extraia o ID da escolha associada à conexão
+    
+        try {
+            // Deleta a escolha correspondente
+            if (choiceId) {
+                await handleDeleteChoice(choiceId);
+            }
+    
+            // Atualiza o estado das conexões após a exclusão
+            setConnections((prevConnections) =>
+                prevConnections.filter((connection) => connection !== selectedConnection)
+            );
+    
+            console.log('Conexão deletada com sucesso!');
+            setSelectedConnection(null); // Limpa a seleção após a exclusão
+        } catch (error) {
+            console.error('Erro ao deletar conexão:', error.message);
+        }
+    };
 
-        setConnections((prevConnections) =>
-            prevConnections.filter((connection) => connection !== selectedConnection)
-        );
-        setSelectedConnection(null); // Limpa a seleção após a exclusão
+    const handleCreateChoice = async (fromScene, toScene, text) => {
+        const payload = {
+            text: text,
+            from_scene: fromScene,
+            to_scene: toScene
+        };
+
+        try {
+            const newChoiceResponse = await api.post(`/create/choice`, payload, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            });
+            if (newChoiceResponse.status === 201) {
+                console.log('Escolha criada com sucesso!');
+                const newChoice = newChoiceResponse.data; // Inclui o ID da choice
+                setChoices([...choices, newChoice]);
+                return newChoice.id; // Retorna o ID da choice criada
+            }
+        } catch (error) {
+            console.error("Erro ao criar a cena:", error.response?.data || error.message);
+        }
     };
 
     const handleCreateConnection = (fromScene, toScene) => {
@@ -258,7 +343,9 @@ const ProjectPage = () => {
         setPendingConnection({ start: fromScene, end: toScene });
     };
     
-    const confirmConnectionCreation = () => {
+    const confirmConnectionCreation = async () => {
+        const text = newConnectionName;
+    
         if (!newConnectionName.trim()) {
             alert("O nome da conexão é obrigatório!");
             setShowNameInput(false);
@@ -266,13 +353,46 @@ const ProjectPage = () => {
             return;
         }
     
-        handleCreateConnection(pendingConnection.start, pendingConnection.end); // Use the function here
-        setConnections((prevConnections) => [
-            ...prevConnections,
-            { ...pendingConnection, name: newConnectionName.trim() },
-        ]);
-        setShowNameInput(false);
-        setPendingConnection(null);
+        try {
+            // Cria a choice e obtém o ID correspondente
+            const choiceId = await handleCreateChoice(pendingConnection.start, pendingConnection.end, text);
+    
+            // Atualiza o estado das conexões com o ID da choice
+            setConnections((prevConnections) => [
+                ...prevConnections,
+                {
+                    id: choiceId, // Use o mesmo ID da choice
+                    name: newConnectionName.trim(),
+                    start: pendingConnection.start,
+                    end: pendingConnection.end,
+                    choiceId: choiceId, // Relacione explicitamente ao ID da choice
+                },
+            ]);
+    
+            setShowNameInput(false);
+            setPendingConnection(null);
+        } catch (error) {
+            console.error("Erro ao confirmar a criação da conexão:", error.message);
+        }
+    };
+
+    const handleEditChoice = async (selectedChoice, newText) => {
+        if (!selectedChoice) {
+            console.error('Nenhuma escolha selecionada.');
+            return;
+        }
+
+        try {
+            const response = await api.patch(`/update/choice?id=${selectedChoice}`, {
+                text: newText || undefined,
+            });
+
+            if (response.status === 200) {
+                console.log('Escolha atualizada com sucesso!');
+            }
+        } catch (error) {
+            console.error('Erro ao atualizar escolha:', error.response?.data || error.message);
+        }
     };
 
     const handleEditConnectionName = (connection) => {
@@ -286,6 +406,7 @@ const ProjectPage = () => {
             return;
         }
     
+        // Atualiza o estado local das conexões
         setConnections((prevConnections) =>
             prevConnections.map((connection) =>
                 connection === editingConnection
@@ -293,6 +414,9 @@ const ProjectPage = () => {
                     : connection
             )
         );
+    
+        // Atualiza o campo `text` da `choice` correspondente no backend
+        handleEditChoice(editingConnection.id, editedConnectionName.trim());
     
         setEditingConnection(null); // Fecha a edição
         setEditedConnectionName(""); // Limpa o input
