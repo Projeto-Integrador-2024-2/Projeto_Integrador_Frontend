@@ -27,27 +27,34 @@ const ProjectBlock = ({ id, name, imageUrl, isPrivate, isStaff, accessToken }) =
   };
 
   return (
-    <div 
+    <div
       style={blockStyle}
       onClick={() => window.location.href = `/project/view/${id}`}
     >
       <img src={imageUrl} alt={name} style={styles.image} />
       <h2 style={styles.name}>{name}</h2>
       {isStaff && ( // Exibe o botão de exclusão apenas para usuários com cargo de staff
-        <button style={styles.deleteButton} onClick={handleDelete}>
+        <button
+          style={styles.deleteButton}
+          onClick={(e) => {
+            e.stopPropagation(); // Impede que o clique no botão dispare o evento da div
+            handleDelete();
+          }}
+        >
           Excluir
         </button>
       )}
     </div>
-  );  
+
+  );
 };
 
 // acha os teus projetos e leva pra editar
 const ProjectBlock2 = ({ id, name, imageUrl }) => {
   //console.log(imageUrl)
   return (
-    <div 
-      style={styles.block} 
+    <div
+      style={styles.block}
       onClick={() => window.location.href = `/project/${id}`}
     >
       <img src={imageUrl} alt={name} style={styles.image} />
