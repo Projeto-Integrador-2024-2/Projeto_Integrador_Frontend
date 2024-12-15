@@ -32,16 +32,44 @@ const Scene = ({
 // Componente para exibir os personagens
 const CharacterContainer = ({ urlCharacterLeft, urlCharacterMiddle, urlCharacterRight }) => (
   <div style={styles.characters}>
-    {urlCharacterLeft && <img src={urlCharacterLeft} alt="Character Left" style={styles.characterLeft} />}
-    {urlCharacterMiddle && <img src={urlCharacterMiddle} alt="Character Middle" style={styles.characterMiddle} />}
-    {urlCharacterRight && <img src={urlCharacterRight} alt="Character Right" style={styles.characterRight} />}
+    {urlCharacterLeft && (
+      <img
+        src={urlCharacterLeft}
+        alt="Character Left"
+        style={styles.characterLeft}
+        onError={(e) => (e.target.style.display = "none")} // Oculta a imagem caso falhe ao carregar
+      />
+    )}
+    {urlCharacterMiddle && (
+      <img
+        src={urlCharacterMiddle}
+        alt="Character Middle"
+        style={styles.characterMiddle}
+        onError={(e) => (e.target.style.display = "none")} // Oculta a imagem caso falhe ao carregar
+      />
+    )}
+    {urlCharacterRight && (
+      <img
+        src={urlCharacterRight}
+        alt="Character Right"
+        style={styles.characterRight}
+        onError={(e) => (e.target.style.display = "none")} // Oculta a imagem caso falhe ao carregar
+      />
+    )}
   </div>
 );
 
 // Componente para exibir a caixa de texto
 const TextBoxContainer = ({ urlTextBox, text }) => (
   <div style={styles.textBoxContainer}>
-    {urlTextBox && <img src={urlTextBox} alt="Text Box" style={styles.textBox} />}
+    {urlTextBox && (
+      <img
+        src={urlTextBox}
+        alt="Text Box"
+        style={styles.textBox}
+        onError={(e) => (e.target.style.display = "none")} // Oculta a imagem caso falhe ao carregar
+      />
+    )}
     {text && <p style={styles.text}>{text}</p>}
   </div>
 );
