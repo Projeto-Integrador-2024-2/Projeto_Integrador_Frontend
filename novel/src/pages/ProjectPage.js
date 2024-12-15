@@ -30,35 +30,6 @@ const ProjectPage = () => {
     const screenBounds = { width: window.innerWidth * 0.8, height: window.innerHeight * 0.8 };
     const accessToken = Cookies.get("accessToken");
 
-    const loadChoicesAndConnections = async () => {
-        try {
-            const response = await api.get("/list/choice", {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`, // Certifique-se de usar o token correto
-                },
-            });
-
-            if (response.status === 200) {
-                const fetchedChoices = response.data;
-                setChoices(fetchedChoices); // Atualiza o estado das choices
-
-                // Cria conexões a partir das choices carregadas
-                const generatedConnections = fetchedChoices.map((choice) => ({
-                    id: choice.id,
-                    name: choice.text, // Usa o texto da choice como nome da conexão
-                    start: choice.from_scene,
-                    end: choice.to_scene,
-                    choiceId: choice.id, // Relaciona a conexão com a choice
-                }));
-
-                setConnections(generatedConnections); // Atualiza o estado das conexões
-                console.log("Choices e conexões carregadas com sucesso!");
-            }
-        } catch (error) {
-            console.error("Erro ao carregar choices:", error.response?.data || error.message);
-        }
-    };
-
     useEffect(() => {
         const fetchScenes = async () => {
             try {
@@ -96,10 +67,40 @@ const ProjectPage = () => {
             }
         };
 
-        // Dar um jeito de n ficar pedindo td vez q mexe um quadrado nesta merda, coitado dos get do backend
+        const loadChoicesAndConnections = async () => {
+            try {
+                const response = await api.get("/list/choice", {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`, // Certifique-se de usar o token correto
+                    },
+                });
+    
+                if (response.status === 200) {
+                    const fetchedChoices = response.data;
+                    setChoices(fetchedChoices); // Atualiza o estado das choices
+    
+                    // Cria conexões a partir das choices carregadas
+                    const generatedConnections = fetchedChoices.map((choice) => ({
+                        id: choice.id,
+                        name: choice.text, // Usa o texto da choice como nome da conexão
+                        start: choice.from_scene,
+                        end: choice.to_scene,
+                        choiceId: choice.id, // Relaciona a conexão com a choice
+                    }));
+    
+                    setConnections(generatedConnections); // Atualiza o estado das conexões
+                    console.log("Choices e conexões carregadas com sucesso!");
+                }
+            } catch (error) {
+                console.error("Erro ao carregar choices:", error.response?.data || error.message);
+            }
+        };
+
         fetchScenes();
         loadChoicesAndConnections();
-        
+    }, [projectId]);
+
+    useEffect(() => {
         const handleClickOutside = (e) => {
             // Verifique se o clique foi fora da linha ou do botão de deletar
             if (!e.target.closest('line') && !e.target.closest('.delete-button') && selectedConnection !== null) {
@@ -113,7 +114,7 @@ const ProjectPage = () => {
         return () => {
             document.removeEventListener('click', handleClickOutside);
         };
-    }, [projectId, selectedConnection, positions]);
+    }, [selectedConnection, positions]);
 
     const handleNewScene = async () => {
         const payload = {
