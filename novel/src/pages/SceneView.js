@@ -38,6 +38,8 @@ const CharacterContainer = ({ urlCharacterLeft, urlCharacterMiddle, urlCharacter
         alt="Character Left"
         style={styles.characterLeft}
         onError={(e) => (e.target.style.display = "none")} // Oculta a imagem caso falhe ao carregar
+        onLoad={(e) => (e.target.style.display = "flex")}
+
       />
     )}
     {urlCharacterMiddle && (
@@ -46,6 +48,8 @@ const CharacterContainer = ({ urlCharacterLeft, urlCharacterMiddle, urlCharacter
         alt="Character Middle"
         style={styles.characterMiddle}
         onError={(e) => (e.target.style.display = "none")} // Oculta a imagem caso falhe ao carregar
+        onLoad={(e) => (e.target.style.display = "flex")}
+
       />
     )}
     {urlCharacterRight && (
@@ -54,6 +58,7 @@ const CharacterContainer = ({ urlCharacterLeft, urlCharacterMiddle, urlCharacter
         alt="Character Right"
         style={styles.characterRight}
         onError={(e) => (e.target.style.display = "none")} // Oculta a imagem caso falhe ao carregar
+        onLoad={(e) => (e.target.style.display = "flex")}
       />
     )}
   </div>
