@@ -70,7 +70,7 @@ const ProjectPage = () => {
 
         const loadChoicesAndConnections = async () => {
             try {
-                const response = await api.get("/list/choice", {
+                const response = await api.get(`/list/choice/${projectId}`, {
                     headers: {
                         Authorization: `Bearer ${accessToken}`, // Certifique-se de usar o token correto
                     },
@@ -370,6 +370,7 @@ const ProjectPage = () => {
             alert("informações do projeto atualizadas!")
         } catch (error) {
             alert("Erro a atualizar a cena")
+            console.log("Erro no update: ", updatedData, project, projectId);
             console.error("Error updating project:", error);
         }
     };
@@ -623,7 +624,7 @@ const ProjectPage = () => {
                             <div style={styles.menu} onClick={(e) => e.stopPropagation()}>
                                 <button onClick={() => handleDefineFirstScene(scene.id)}>Definir Primeira Cena</button>
                                 <button onClick={() => handleEdit(scene.id)}>Editar</button>
-                                <button onClick={() => handleDeleteScene(scene)}>Deletar</button> {/* Passar o id aqui */}
+                                <button onClick={() => handleDeleteScene(scene.id)}>Deletar</button> {/* Passar o id aqui */}
                             </div>
                         )}
                     </div>

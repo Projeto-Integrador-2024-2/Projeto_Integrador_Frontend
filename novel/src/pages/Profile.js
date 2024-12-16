@@ -92,6 +92,7 @@ const Profile = () => {
     const projectData = {
       name: "Novo Projeto",
       privacy: true, // Altere conforme os campos esperados pelo backend
+      genres: [],
     };
   
     try {
@@ -101,7 +102,7 @@ const Profile = () => {
         },
       });
   
-      console.log("Projeto criado com sucesso:", response.data);
+      alert("Novo Projeto Criado!")
   
       // Recarregar a página
       window.location.reload(); // Isso vai recarregar a página inteira

@@ -118,7 +118,7 @@ const styles = {
     bottom: "0", // Posiciona no fundo do container
     left: "4%", // Posiciona à esquerda do container
     height: "500px",
-    maxWidth: "25%",
+    maxWidth: "45%",
     objectFit: "contain",
   },
   characterMiddle: {

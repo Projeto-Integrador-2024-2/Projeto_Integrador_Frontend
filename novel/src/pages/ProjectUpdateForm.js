@@ -10,7 +10,7 @@ const ProjectUpdateForm = ({ project, onSubmit }) => {
 
   const [availableGenres, setAvailableGenres] = useState([]); // Para armazenar os gêneros disponíveis
 
-  console.log(formData, availableGenres)
+  //console.log(formData, availableGenres)
 
   // Busca os gêneros na API
   useEffect(() => {
