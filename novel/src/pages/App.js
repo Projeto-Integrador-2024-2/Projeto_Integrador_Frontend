@@ -21,19 +21,9 @@ import ProjectCreate from "./ProjectCreate";
 //import "slick-carousel/slick/slick.css"; 
 //import "slick-carousel/slick/slick-theme.css";
 
-
-const globalStyles = {
-  margin: 0,
-  padding: 0,
-  width: '100%',
-  height: '100%',
-  boxSizing: 'border-box', // Garante que padding e bordas sejam contadas no tamanho total
-  overflowX: 'hidden', // Remove barras de rolagem horizontais
-};
-
 function App() {
   return (
-    <div style={globalStyles}>
+    <div className="app-container">
       <Router>
         {/* O Header estará sempre visível */}
         <Header /> 
@@ -72,11 +62,11 @@ function App() {
           />
           <Route 
             path="/scene" 
-           element={
-              <ProtectedRoute>
-                <Scene />
-              </ProtectedRoute>
-            } 
+          element={
+            <ProtectedRoute>
+              <Scene />
+            </ProtectedRoute>
+          } 
           />
           <Route 
             path="/choice" 

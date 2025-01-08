@@ -1,0 +1,116 @@
+.register-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-image: url('/public/images/2.png'), linear-gradient(to right, transparent 40%, #ff00d6);
+    background-blend-mode: overlay;
+    background-size: cover;
+    background-position: center;
+    font-family: 'Poppins', sans-serif;
+    padding-top: 1px;
+}
+
+.signup-title {
+    font-size: 60px;
+    font-weight: bold;
+    color: #ff00ff;
+    margin-bottom: 10px;
+    text-align: center; /* Centraliza o texto */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    font-family: 'Chewy', sans-serif;
+    position: absolute; /* Permite personalizar a posição */
+    top: 15%; /* Move para o topo da tela */
+    left: 50%; /* Centraliza horizontalmente */
+    transform: translate(-50%, -50%); /* Corrige o alinhamento central */
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Espaçamento entre o texto e a imagem */
+}
+
+.title-white {
+    color: white;
+}
+
+.title-pink {
+    color: #7e005f;
+}
+
+.title-image {
+    width: 65px;
+    height: auto;
+}
+
+.form-container {
+    width: 25%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start; /* Alinha o conteúdo à esquerda */
+    background-color: rgba(255, 171, 226);
+    border-radius: 20px;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    margin-right: 5%;
+    margin-left: 5%; /* Adiciona um pequeno deslocamento à esquerda */
+}
+
+.register-form {
+    width: 100%;
+}
+
+.form-group {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.signup-input-field {
+    width: 100%;
+    padding: 5px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    outline: none;
+    box-shadow: inset 0px 2px 5px rgba(0, 0, 0, 0.1);
+    font-family: 'Poppins', sans-serif;
+}
+
+.submit-button {
+    width: 100%;
+    padding: 12px;
+    border-radius: 35px;
+    background-color: #fff; /* Cor do fundo do botão em branco */
+    color: #7e005f; /* Cor do texto do botão em rosa */
+    font-weight: bold;
+    border: none;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    font-size: 16px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.signup-container {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.signup-text {
+    font-size: 14px;
+    color: #555;
+    font-family: 'Poppins', sans-serif;
+}
+
+.signup-link {
+    color: #7e005f;
+    font-weight: bold;
+    font-family: 'Poppins', sans-serif;
+}
+
+.login-title {
+    font-size: 30px;
+    font-weight: bold;
+    color: #7e005f;
+    margin-bottom: 20px; /* Distância maior entre o título e o formulário */
+    font-family: 'Signika Negative', sans-serif; /* Fonte usada aqui */
+    text-align: center;
+    margin-left: 30px;
+}

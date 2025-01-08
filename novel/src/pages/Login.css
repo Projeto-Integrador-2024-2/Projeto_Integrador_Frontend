@@ -1,0 +1,120 @@
+.login-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* Alinha o conteúdo à direita */
+    min-height: 100vh;
+    background-image: url('/public/images/2.png'), linear-gradient(to right, transparent 40%, #ff00d6);
+    background-blend-mode: overlay;
+    background-size: cover;
+    background-position: center;
+    font-family: 'Poppins', sans-serif; /* Aplica a fonte 'Poppins' globalmente */
+    padding-top: 1px; /* Reduz o padding superior */
+}
+
+.title {
+    font-size: 60px;
+    font-weight: bold;
+    color: #ff00ff;
+    text-align: right; /* Alinha o título à direita */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    font-family: 'Chewy', sans-serif;
+    position: absolute; /* Fixa o título no topo da página */
+    top: 80px; /* Ajuste a distância do topo conforme necessário */
+    right: 90px; /* Alinha o título à direita */
+}
+
+.title-white {
+    color: white;
+}
+
+.title-pink {
+    color: #7e005f;
+}
+
+.title-image {
+    width: 65px;
+    height: auto;
+}
+
+.form-container {
+    width: 25%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start; /* Alinha o conteúdo à esquerda */
+    background-color: rgba(255, 171, 226);
+    border-radius: 20px;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2);
+    padding: 40px;
+    margin-right: 5%;
+}
+
+.login-form {
+    width: 100%;
+}
+
+.form-group {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.input-label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-family: 'Poppins', sans-serif;
+    text-align: left; /* Alinha o texto à esquerda */
+}
+
+.input-field {
+    width: 100%;
+    padding: 20px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    outline: none;
+    box-shadow: inset 0px 2px 5px rgba(0, 0, 0, 0.1);
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px; /* Adicione para uniformizar o tamanho da fonte */
+    height: 30px;   /* Adicione uma altura fixa para ambos os inputs */
+}
+
+.submit-button {
+    width: 100%;
+    padding: 12px;
+    border-radius: 35px;
+    background-color: #fff; /* Cor do fundo do botão em branco */
+    color: #7e005f; /* Cor do texto do botão em rosa */
+    font-weight: bold;
+    border: none;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    font-size: 16px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.signup-container {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.signup-text {
+    font-size: 14px;
+    color: #555;
+    font-family: 'Poppins', sans-serif;
+}
+
+.signup-link {
+    color: #7e005f;
+    font-weight: bold;
+    font-family: 'Poppins', sans-serif;
+}
+
+.login-title {
+  font-size: 30px;
+  font-weight: bold;
+  color: #7e005f;
+  margin-bottom: 20px; /* Distância maior entre o título e o formulário */
+  font-family: 'Signika Negative', sans-serif; /* Fonte usada aqui */
+  text-align: center;
+  margin-left: 10px;
+}

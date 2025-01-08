@@ -1,0 +1,96 @@
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 20px;
+    height: 60px;
+}
+
+.header-title {
+    font-size: 55px;
+    font-weight: bold;
+    font-family: 'Chewy', sans-serif;
+    cursor: pointer; /* Adiciona um cursor de ponteiro para indicar que é clicável */
+}
+
+.header-image {
+    width: 50px;
+    height: auto;
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+.social-icons {
+    display: flex;
+    gap: 15px;
+}
+
+.icon {
+    font-size: 20px;
+    color: #7e005f;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.profile-container {
+    position: relative; /* Para o menu suspenso aparecer em relação ao ícone */
+    display: flex;
+    align-items: center; /* Garante que o ícone de perfil fique alinhado ao centro verticalmente */
+}
+
+.profile-icon {
+    font-size: 30px;
+    color: #fff;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 35px;
+    right: 0;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    width: 180px;
+    z-index: 10;
+    opacity: 1;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.menu-item {
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, padding-left 0.2s;
+}
+
+.back-button {
+    font-size: 24px;
+    color: #fff;
+    cursor: pointer;
+    margin-right: 10px; /* Ajuste da posição da seta */
+}
+
+.nav-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.login-register-container {
+    background-color: #fff; 
+}
+
+.login-register-title {
+    color: #7e005f;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.main-container {
+    background-color: #7e005f;
+}
+
+.main-title {
+    color: #fff;
+    margin-left: 10px; /* Espaço entre a seta e o título */
+}

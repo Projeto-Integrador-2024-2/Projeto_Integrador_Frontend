@@ -3,6 +3,7 @@ import Cookies from 'js-cookie';
 import { useLocation, useNavigate } from 'react-router-dom'; // Adicionando useNavigate
 import { FaTwitter, FaInstagram, FaFacebook, FaUser } from 'react-icons/fa';
 import { IoArrowBack } from 'react-icons/io5'; // Ícone de seta de voltar
+import './Header.css';
 
 const Header = () => {
     const location = useLocation();
@@ -11,17 +12,20 @@ const Header = () => {
 
     // Função para renderizar o conteúdo para Login e Register
     const renderContentForLoginAndRegister = () => (
-        <div style={{ ...styles.container, ...styles.loginRegisterContainer }}>
-            <h1 style={{ ...styles.title, ...styles.loginRegisterTitle }}>Your Novel</h1>
-            <div style={styles.socialIcons}>
+        <div className="header-container login-register-container">
+            <h1 className="header-title login-register-title">
+                Your Novel
+                <img src="/images/coracao_roxo.png" alt="coração roxo" className="header-image" />
+            </h1>
+            <div className="social-icons">
                 <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
-                    <FaTwitter style={styles.icon} />
+                    <FaTwitter className="icon" />
                 </a>
                 <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
-                    <FaInstagram style={styles.icon} />
+                    <FaInstagram className="icon" />
                 </a>
                 <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
-                    <FaFacebook style={styles.icon} />
+                    <FaFacebook className="icon" />
                 </a>
             </div>
         </div>
@@ -29,31 +33,33 @@ const Header = () => {
 
     // Função para renderizar o conteúdo padrão do Header
     const renderContentForMainScreens = () => (
-        <div style={{ ...styles.container, ...styles.mainContainer }}>
+        <div className="header-container main-container">
             {/* Container para a seta de navegação e o título */}
             {location.pathname !== '/login' && location.pathname !== '/register' && (
-                <div style={styles.navContainer}>
+                <div className="nav-container">
                     <IoArrowBack 
-                        style={styles.backButton} 
+                        className="back-button" 
                         onClick={() => navigate(-1)} // Navega para a página anterior
                     />
                     <h1 
-                        style={{ ...styles.title, ...styles.mainTitle }} 
+                        className="header-title main-title" 
                         onClick={() => window.location.href = '/'}
-                        >Your Novel
+                    >
+                        Your Novel
+                        <img src="/images/coracao_roxo.png" alt="coração roxo" className="header-image" />
                     </h1>
                 </div>
             )}
             {/* Ícone de perfil */}
-            <div style={styles.profileContainer}>
+            <div className="profile-container">
                 <FaUser 
-                    style={styles.profileIcon} 
+                    className="profile-icon" 
                     onClick={() => setMenuOpen(!menuOpen)} // Alterna o estado do menu
                 />
                 {menuOpen && (
-                    <div style={styles.dropdownMenu}>
+                    <div className="dropdown-menu">
                         <div
-                            style={styles.menuItem}
+                            className="menu-item"
                             onClick={() => {
                                 setMenuOpen(false); // Fecha o menu
                                 navigate('/profile'); // Redireciona para a página de perfil
@@ -62,7 +68,7 @@ const Header = () => {
                             Perfil
                         </div>
                         <div
-                            style={styles.menuItem}
+                            className="menu-item"
                             onClick={() => {
                                 setMenuOpen(false); // Fecha o menu
                                 navigate('/profile/edit'); // Redireciona para a tela de edição de perfil
@@ -70,7 +76,7 @@ const Header = () => {
                         >
                             Settings
                         </div>
-                        <div style={styles.menuItem} onClick={handleLogout}>Logout</div>
+                        <div className="menu-item" onClick={handleLogout}>Logout</div>
                     </div>
                 )}
             </div>
@@ -92,84 +98,6 @@ const Header = () => {
 
     // Caso contrário, renderiza o conteúdo padrão do Header
     return renderContentForMainScreens();
-};
-
-// Estilos do Header ajustados
-const styles = {
-    container: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: '5px 20px',
-        height: '60px',
-    },
-    title: {
-        fontSize: '55px',
-        fontWeight: 'bold',
-        fontFamily: '"Chewy", sans-serif',
-        cursor: 'pointer', // Adiciona um cursor de ponteiro para indicar que é clicável
-    },
-    socialIcons: {
-        display: 'flex',
-        gap: '15px',
-    },
-    icon: {
-        fontSize: '20px',
-        color: '#7e005f',
-        cursor: 'pointer',
-        transition: 'color 0.3s',
-    },
-    profileContainer: {
-        position: 'relative', // Para o menu suspenso aparecer em relação ao ícone
-    },
-    profileIcon: {
-        fontSize: '30px',
-        color: '#fff',
-        cursor: 'pointer',
-        transition: 'color 0.3s',
-    },
-    dropdownMenu: {
-        position: 'absolute',
-        top: '35px',
-        right: '0',
-        backgroundColor: '#fff',
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-        borderRadius: '8px',
-        width: '180px',
-        zIndex: 10,
-        opacity: 1,
-        animation: 'fadeIn 0.3s ease-out',
-    },
-    menuItem: {
-        padding: '12px 16px',
-        cursor: 'pointer',
-        transition: 'background-color 0.3s, padding-left 0.2s',
-    },
-    backButton: {
-        fontSize: '24px',
-        color: '#fff',
-        cursor: 'pointer',
-        marginRight: '10px', // Ajuste da posição da seta
-    },
-    navContainer: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-    },
-    loginRegisterContainer: {
-        backgroundColor: '#fff', 
-    },
-    loginRegisterTitle: {
-        color: '#7e005f',
-        textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)',
-    },
-    mainContainer: {
-        backgroundColor: '#7e005f',
-    },
-    mainTitle: {
-        color: '#fff',
-        marginLeft: '10px', // Espaço entre a seta e o título
-    },
 };
 
 export default Header;
