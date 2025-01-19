@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie"; // Certifique-se de que esta biblioteca está instalada
 import { ProjectBlock }  from "./ProjectBlock";
 import api from "../api_access";
-import './HomePage.css';
+import './styles/HomePage.css';
 
 const HomePage = () => {
   const [projects, setProjects] = useState([]);

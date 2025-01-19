@@ -10,8 +10,7 @@ import ProjectView from "./ProjectView";
 import Scene from "../velho/Scene";
 import Choice from "../velho/Choice";
 import Project from "../velho/Project";
-import './styles.css';
-
+import './styles/styles.css';
 import ProtectedRoute from "../services/ProtectedRoute";
 import React from "react";
 import Profile from "./Profile";

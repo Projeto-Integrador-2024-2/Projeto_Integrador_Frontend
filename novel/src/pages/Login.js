@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../api_access';
 import Cookies from 'js-cookie';
-import './Login.css';
+import './styles/Login.css';
 
 export default function Login() {
     const [username, setUsername] = useState('');

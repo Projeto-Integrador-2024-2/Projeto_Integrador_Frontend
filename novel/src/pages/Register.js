@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../api_access';
-import './Register.css';
+import './styles/Register.css';
 
 export default function Register() {
     const [username, setUsername] = useState('');

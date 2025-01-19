@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Cookies from "js-cookie";
 import api from '../api_access';
 import { ProjectBlock2 } from "./ProjectBlock";
-import './Profile.css';
+import './styles/Profile.css';
 
 const Profile = () => {
   const [profile, setProfile] = useState(null); // Estado para armazenar dados do perfil

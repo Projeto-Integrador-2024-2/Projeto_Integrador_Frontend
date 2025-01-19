@@ -3,7 +3,7 @@ import Cookies from 'js-cookie';
 import { useLocation, useNavigate } from 'react-router-dom'; // Adicionando useNavigate
 import { FaTwitter, FaInstagram, FaFacebook, FaUser } from 'react-icons/fa';
 import { IoArrowBack } from 'react-icons/io5'; // Ícone de seta de voltar
-import './Header.css';
+import './styles/Header.css';
 
 const Header = () => {
     const location = useLocation();
