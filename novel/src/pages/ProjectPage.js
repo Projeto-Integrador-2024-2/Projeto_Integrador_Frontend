@@ -382,6 +382,29 @@ const ProjectPage = () => {
         setPendingConnection({ start: fromScene, end: toScene });
     };
 
+    const handleDuplicateScene = async (scene) => {
+        const payload = scene
+
+        const duplicatedScene = await api.post(`/create/scene`, payload, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+
+        if (!duplicatedScene) {
+            alert("Erro")
+        }
+
+        //console.log(duplicatedScene)
+        setScenes((prevScenes) => [...prevScenes, duplicatedScene.data]);
+        const newSceneId = duplicatedScene.data.id;
+        setPositions((prevPositions) => ({
+            ...prevPositions,
+            [newSceneId]: { x: 20, y: 20 },
+        }));
+
+    }
+
     const confirmConnectionCreation = async () => {
         const text = newConnectionName;
 
@@ -624,6 +647,7 @@ const ProjectPage = () => {
                             <div style={styles.menu} onClick={(e) => e.stopPropagation()}>
                                 <button onClick={() => handleDefineFirstScene(scene.id)}>Definir Primeira Cena</button>
                                 <button onClick={() => handleEdit(scene.id)}>Editar</button>
+                                <button onClick={() => handleDuplicateScene(scene)}>Duplicar</button>
                                 <button onClick={() => handleDeleteScene(scene.id)}>Deletar</button> {/* Passar o id aqui */}
                             </div>
                         )}
