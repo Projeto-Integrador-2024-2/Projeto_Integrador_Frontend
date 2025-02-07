@@ -7,9 +7,6 @@ import ProjectPage from "./ProjectPage";
 import ScenePage from "./ScenePage";
 import SceneCreate from "./SceneCreate";
 import ProjectView from "./ProjectView";
-import Scene from "../velho/Scene";
-import Choice from "../velho/Choice";
-import Project from "../velho/Project";
 import './styles/styles.css';
 import ProtectedRoute from "../services/ProtectedRoute";
 import React from "react";
@@ -50,30 +47,6 @@ function App() {
                 <ProjectPage/> 
               </ProtectedRoute>
             }
-          />
-          <Route 
-            path="/project" 
-            element={
-              <ProtectedRoute>
-                <Project />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/scene" 
-          element={
-            <ProtectedRoute>
-              <Scene />
-            </ProtectedRoute>
-          } 
-          />
-          <Route 
-            path="/choice" 
-            element={
-              <ProtectedRoute>
-                <Choice />
-              </ProtectedRoute>
-            } 
           />
           <Route 
             path="/profile" 
