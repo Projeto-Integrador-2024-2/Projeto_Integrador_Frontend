@@ -59,22 +59,50 @@ const ProjectRating = () => {
             user: userId,  // ID do usuário
             project: Number(projectId),  // ID do projeto
         };
-        console.log(payload)
+        //console.log(payload)
         try {
-            await api.post(
-                `/create/grade`,  // A URL da API, incluindo o ID do projeto
-                payload,  // O corpo da requisição com os dados
+            const response = await api.post(
+                `/create/grade`,  // URL da API
+                payload,  // Corpo da requisição com os dados
                 {
                     headers: {
-                        Authorization: `Bearer ${Cookies.get("accessToken")}`,  // O token de autenticação
+                        Authorization: `Bearer ${Cookies.get("accessToken")}`,  // Token de autenticação
                         "Content-Type": "application/json",  // Tipo de conteúdo JSON
                     },
                 }
             );
-            setMessage("Avaliação enviada com sucesso! Obrigado!");
+        
+            // Verifica se a requisição foi bem-sucedida (status 201)
+            if (response.status === 201) {
+                setMessage("Avaliação enviada com sucesso! Obrigado!");
+            }
+        
         } catch (error) {
             console.error("Erro ao enviar avaliação:", error);
-            setMessage("Erro ao enviar a avaliação. Tente novamente.");
+        
+            // Verifica o status do erro e define a mensagem correspondente
+            if (error.response) {
+                switch (error.response.status) {
+                    case 400:
+                        setMessage("Requisição inválida. Verifique os dados enviados.");
+                        break;
+                    case 403:
+                        setMessage("Você não pode avaliar em nome de outro usuário.");
+                        break;
+                    case 404:
+                        setMessage("Projeto não encontrado.");
+                        break;
+                    case 409:
+                        setMessage("Você já avaliou este projeto.");
+                        break;
+                    default:
+                        setMessage("Erro ao enviar a avaliação. Tente novamente.");
+                        break;
+                }
+            } else {
+                // Erro de rede ou outro erro não relacionado à resposta da API
+                setMessage("Erro ao conectar com o servidor. Tente novamente.");
+            }
         }
     };
 

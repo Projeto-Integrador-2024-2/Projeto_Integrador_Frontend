@@ -32,7 +32,7 @@ const ProjectView = () => {
           },
         });
 
-        console.log(sceneResponse.data);
+        //console.log(sceneResponse.data);
         setScenes(sceneResponse.data);
 
         if (choiceResponse.status === 204) {
