@@ -3,6 +3,9 @@ import Cookies from "js-cookie";
 import api from "../api_access";
 import { useParams } from "react-router-dom";
 import Scene from "./SceneView";
+import ProjectRating from "./components/RatingProject";
+import './styles/ProjectView.css';
+
 
 const ProjectView = () => {
   const { projectId } = useParams();
@@ -29,20 +32,18 @@ const ProjectView = () => {
           },
         });
 
-        console.log(sceneResponse.data)
+        console.log(sceneResponse.data);
         setScenes(sceneResponse.data);
-        if (choiceResponse.status === 204) { //Se der 204 não da problema
-          console.log([])
+
+        if (choiceResponse.status === 204) {
+          console.log([]);
           setChoices([]);
-
         } else {
-          console.log(choiceResponse.data)
+          console.log(choiceResponse.data);
           setChoices(choiceResponse.data);
-
         }
-
       } catch (err) {
-        console.error("Erro ao buscar cenas:", err?.sceneResponse?.data || err.message);
+        console.error("Erro ao buscar cenas:", err?.response?.data || err.message);
         setError("Não foi possível carregar as cenas.");
       } finally {
         setLoading(false);
@@ -53,12 +54,19 @@ const ProjectView = () => {
   }, [projectId]);
 
   const handleChoice = (toSceneId) => {
-    const nextSceneIndex = scenes.findIndex(scene => scene.id === toSceneId);
+    const nextSceneIndex = scenes.findIndex((scene) => scene.id === toSceneId);
     if (nextSceneIndex !== -1) {
       setCurrentSceneIndex(nextSceneIndex);
     }
   };
 
+  const restartStory = () => {
+    setCurrentSceneIndex(0); // Volta para a primeira cena
+  };
+
+  const handleEvaluateProject = () => {
+    window.location.href = `/project/evaluate/${projectId}`; // Redireciona para a página de avaliação
+  };
 
   if (loading) {
     return <p>Carregando cenas...</p>;
@@ -69,7 +77,7 @@ const ProjectView = () => {
   }
 
   const currentScene = scenes[currentSceneIndex];
-  const currentChoices = choices.filter(choice => choice.from_scene === currentScene.id);
+  const currentChoices = choices.filter((choice) => choice.from_scene === currentScene.id);
 
   return (
     <div>
@@ -84,12 +92,21 @@ const ProjectView = () => {
             urlCharacterRight={currentScene.url_character_right}
             text={currentScene.text}
           />
-          <div style={styles.buttonContainer}>
-            {currentChoices.map(choice => (
-              <button style={styles.button} key={choice.id} onClick={() => handleChoice(choice.to_scene)}>
-                {choice.text}
-              </button>
-            ))}
+          <div className="button-container">
+            {currentChoices.length > 0 ? (
+              currentChoices.map((choice) => (
+                <button className="button" key={choice.id} onClick={() => handleChoice(choice.to_scene)}>
+                  {choice.text}
+                </button>
+              ))
+            ) : (
+              <>
+                <button className="button" onClick={restartStory}>
+                  Reiniciar História
+                </button>
+                <ProjectRating />
+              </>
+            )}
           </div>
         </div>
       ) : (
@@ -97,28 +114,8 @@ const ProjectView = () => {
       )}
     </div>
   );
-
-}
-
-const styles = {
-  buttonContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    height: '100vh',
-    // Ajuste conforme necessário 
-  },
-  button: { padding: '20px 30px',
-    fontSize: '16px',
-    fontWeight: 'bold',
-    color: '#fff',
-    background: 'linear-gradient(45deg,rgb(255, 0, 191),rgba(255, 113, 248, 0.68))',
-    border: 'none',
-    borderRadius: '25px',
-    boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
-    cursor: 'pointer',
-    transition: 'all 0.3s ease',
-  },
 };
+
+
 
 export default ProjectView;
