@@ -4,7 +4,7 @@ import './styles/ProjectBlock.css'; // Importar o CSS
 
 const defaultImageUrl = "/images/No_Image_Available.jpg"; // Caminho da imagem padrão
 
-const ProjectBlock = ({ id, name, imageUrl, isPrivate, isStaff, accessToken }) => {
+const ProjectBlock = ({ id, name, imageUrl, isPrivate, isStaff, accessToken, averageGrade }) => {
   const blockClass = isPrivate ? "block private" : "block";
 
   const handleDelete = async () => {
@@ -24,6 +24,32 @@ const ProjectBlock = ({ id, name, imageUrl, isPrivate, isStaff, accessToken }) =
     }
   };
 
+  // Função para renderizar as estrelas baseadas na nota (averageGrade)
+  const renderStars = (rating) => {
+    // Garantir que o rating seja um número válido entre 0 e 100
+    const validRating = Math.min(Math.max(parseFloat(rating), 0), 100);
+    // Converte a nota de 0-100 para uma escala de 0-5
+    const starsRating = (validRating / 20).toFixed(1);  // Agora o valor de starsRating será entre 0 e 5, com uma casa decimal
+
+    const fullStars = Math.floor(starsRating);
+    const halfStars = starsRating % 1 >= 0.5 ? 1 : 0;
+    const emptyStars = 5 - fullStars - halfStars;
+
+    return (
+      <div className="stars">
+        {[...Array(fullStars)].map((_, index) => (
+          <span key={`full-star-${index}`} className="star full">★</span>
+        ))}
+        {halfStars > 0 && (
+          <span className="star half">★</span>  // Estrela meia cheia
+        )}
+        {[...Array(emptyStars)].map((_, index) => (
+          <span key={`empty-star-${index}`} className="star empty">★</span>
+        ))}
+      </div>
+    );
+  };
+
   return (
     <div
       className={blockClass}
@@ -36,6 +62,7 @@ const ProjectBlock = ({ id, name, imageUrl, isPrivate, isStaff, accessToken }) =
         onError={(e) => { e.target.src = defaultImageUrl; }} // Define imagem padrão em caso de erro
       />
       <h2 className="name">{name}</h2>
+      {averageGrade != null && renderStars(averageGrade)}  {/* Exibe as estrelas caso a nota esteja presente */}
       {isStaff && (
         <button
           className="deleteButton"

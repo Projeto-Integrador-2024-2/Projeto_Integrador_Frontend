@@ -46,3 +46,28 @@
   padding: 5px 10px;
   cursor: pointer;
 }
+
+.stars {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.star {
+  font-size: 1.5rem; /* Ajuste o tamanho das estrelas */
+  color: #d3d3d3; /* Cor das estrelas vazias (cinza claro) */
+  margin-right: 5px;
+}
+
+.star.full {
+  color: #ffcc00; /* Cor das estrelas cheias (amarelo) */
+}
+
+.star.half {
+  color: linear-gradient(to right, #ffcc00 50%, #d3d3d3 50%); /* Cor das estrelas meia cheia (gradiente) */
+}
+
+.star.empty {
+  color: #d3d3d3; /* Cor das estrelas vazias (cinza claro) */
+  opacity: 0.5; /* Torna as estrelas vazias um pouco mais transparentes */
+}
