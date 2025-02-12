@@ -1,6 +1,6 @@
 .block {
   width: 200px;
-  height: 180px;
+  
   background-color: #f0f0f0;
   border-radius: 8px;
   display: flex;
@@ -48,7 +48,6 @@
 }
 
 .stars {
-  display: flex;
   justify-content: flex-start;
   align-items: center;
 }

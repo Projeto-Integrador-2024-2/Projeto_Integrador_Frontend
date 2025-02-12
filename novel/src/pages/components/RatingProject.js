@@ -61,8 +61,9 @@ const ProjectRating = () => {
         };
         //console.log(payload)
         try {
-            const response = await api.post(
-                `/create/grade`,  // URL da API
+            // Tenta criar a avaliação
+            const createResponse = await api.post(
+                `/create/grade`,  // URL da API para criação
                 payload,  // Corpo da requisição com os dados
                 {
                     headers: {
@@ -72,36 +73,79 @@ const ProjectRating = () => {
                 }
             );
         
-            // Verifica se a requisição foi bem-sucedida (status 201)
-            if (response.status === 201) {
+            // Verifica se a criação foi bem-sucedida (status 201)
+            if (createResponse.status === 201) {
                 setMessage("Avaliação enviada com sucesso! Obrigado!");
             }
         
-        } catch (error) {
-            console.error("Erro ao enviar avaliação:", error);
+        } catch (createError) {
+            console.error("Erro ao enviar avaliação:", createError);
         
-            // Verifica o status do erro e define a mensagem correspondente
-            if (error.response) {
-                switch (error.response.status) {
-                    case 400:
-                        setMessage("Requisição inválida. Verifique os dados enviados.");
-                        break;
-                    case 403:
-                        setMessage("Você não pode avaliar em nome de outro usuário.");
-                        break;
-                    case 404:
-                        setMessage("Projeto não encontrado.");
-                        break;
-                    case 409:
-                        setMessage("Você já avaliou este projeto.");
-                        break;
-                    default:
-                        setMessage("Erro ao enviar a avaliação. Tente novamente.");
-                        break;
+            // Se o erro for 409 (Conflito), tenta atualizar a avaliação existente
+            if (createError.response && createError.response.status === 409) {
+                try {
+                    const project_id = payload.project;  // Obtém o project_id do payload
+                    const updateResponse = await api.patch(
+                        `/update/grade/${project_id}/`,  // URL da API para atualização
+                        payload,  // Corpo da requisição com os dados
+                        {
+                            headers: {
+                                Authorization: `Bearer ${Cookies.get("accessToken")}`,
+                                "Content-Type": "application/json",
+                            },
+                        }
+                    );
+        
+                    // Verifica se a atualização foi bem-sucedida (status 200)
+                    if (updateResponse.status === 200) {
+                        setMessage("Avaliação atualizada com sucesso! Obrigado!");
+                    }
+        
+                } catch (updateError) {
+                    console.error("Erro ao atualizar avaliação:", updateError);
+        
+                    // Verifica o status do erro e define a mensagem correspondente
+                    if (updateError.response) {
+                        switch (updateError.response.status) {
+                            case 400:
+                                setMessage("Requisição inválida. Verifique os dados enviados.");
+                                break;
+                            case 403:
+                                setMessage("Você não pode atualizar a avaliação de outro usuário.");
+                                break;
+                            case 404:
+                                setMessage("Projeto não encontrado.");
+                                break;
+                            default:
+                                setMessage("Erro ao atualizar a avaliação. Tente novamente.");
+                                break;
+                        }
+                    } else {
+                        // Erro de rede ou outro erro não relacionado à resposta da API
+                        setMessage("Erro ao conectar com o servidor. Tente novamente.");
+                    }
                 }
             } else {
-                // Erro de rede ou outro erro não relacionado à resposta da API
-                setMessage("Erro ao conectar com o servidor. Tente novamente.");
+                // Outros erros durante a criação
+                if (createError.response) {
+                    switch (createError.response.status) {
+                        case 400:
+                            setMessage("Requisição inválida. Verifique os dados enviados.");
+                            break;
+                        case 403:
+                            setMessage("Você não pode avaliar em nome de outro usuário.");
+                            break;
+                        case 404:
+                            setMessage("Projeto não encontrado.");
+                            break;
+                        default:
+                            setMessage("Erro ao enviar a avaliação. Tente novamente.");
+                            break;
+                    }
+                } else {
+                    // Erro de rede ou outro erro não relacionado à resposta da API
+                    setMessage("Erro ao conectar com o servidor. Tente novamente.");
+                }
             }
         }
     };
