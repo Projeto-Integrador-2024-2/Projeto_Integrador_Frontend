@@ -31,7 +31,7 @@ const HomePage = () => {
           }
           return project;
         });
-        //console.log(updatedProjects.)
+       
         setProjects(updatedProjects);
       } catch (err) {
         console.error("Erro ao buscar projetos:", err.response?.data || err.message);

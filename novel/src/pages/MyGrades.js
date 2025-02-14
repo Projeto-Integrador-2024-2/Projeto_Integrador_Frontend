@@ -23,6 +23,7 @@ const MyGrades = () => {
             Authorization: `Bearer ${accessToken}`,
           },
         });
+        console.log(response.data)
         const updatedProjects = response.data.map((project) => {
           if (project.first_scene === null) {
             project.first_scene = {
