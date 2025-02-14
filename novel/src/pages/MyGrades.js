@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie"; // Certifique-se de que esta biblioteca está instalada
-import { ProjectBlock }  from "./ProjectBlock";
+import { ProjectBlockGrade }  from "./ProjectBlock";
 import api from "../api_access";
 import './styles/HomePage.css';
 
@@ -23,7 +23,7 @@ const MyGrades = () => {
             Authorization: `Bearer ${accessToken}`,
           },
         });
-        console.log(response.data)
+        //console.log(response.data)
         const updatedProjects = response.data.map((project) => {
           if (project.first_scene === null) {
             project.first_scene = {
@@ -134,15 +134,14 @@ const MyGrades = () => {
           <div className="homepage-projectsContainer">
             {filteredProjects.length > 0 ? (
               filteredProjects.map((project) => (
-                <ProjectBlock
+                <ProjectBlockGrade
                   key={project.id}
                   id={project.id}
                   name={project.name}
                   imageUrl={project.first_scene.url_background}
                   isPrivate={project.privacy}
-                  isStaff={isStaff}
                   accessToken={accessToken}
-                  averageGrade={project.average_grade}
+                  averageGrade={project.user_grade}
                 />
               ))
             ) : (
