@@ -13,6 +13,7 @@ import React from "react";
 import Profile from "./Profile";
 import ProfileEdit from "./ProfileEdit";
 import ProjectCreate from "./ProjectCreate";
+import MyGrades from "./MyGrades";
 
 //import "slick-carousel/slick/slick.css"; 
 //import "slick-carousel/slick/slick-theme.css";
@@ -93,6 +94,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <SceneCreate />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/myGrades" 
+            element={
+              <ProtectedRoute>
+                <MyGrades />
               </ProtectedRoute>
             } 
           />

@@ -70,6 +70,15 @@ const Header = () => {
                         <div
                             className="menu-item"
                             onClick={() => {
+                                setMenuOpen(false);
+                                navigate('/myGrades');
+                            }}
+                        >
+                            My Grades
+                        </div>
+                        <div
+                            className="menu-item"
+                            onClick={() => {
                                 setMenuOpen(false); // Fecha o menu
                                 navigate('/profile/edit'); // Redireciona para a tela de edição de perfil
                             }}
